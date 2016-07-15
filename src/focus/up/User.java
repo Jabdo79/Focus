@@ -1,6 +1,9 @@
 package focus.up;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 public class User {
+	private int id; 
 	private String email; 
 	private int level = 1;
 	private int exp;
@@ -8,6 +11,7 @@ public class User {
 	private int startTime; 
 	private int endTime; 
 	private String studyAddress;
+	
 	public String getEmail() {
 		return email;
 	}
@@ -49,8 +53,22 @@ public class User {
 	}
 	public void setStudyAddress(String studyAddress) {
 		this.studyAddress = studyAddress;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	} 
 	
-
-	
+	public void cooldownTimer(User user){
+		StopWatch stopwatch = new StopWatch();
+		stopwatch.start();
+		while(stopwatch.getTime() < 7200000){
+			//do nothing for 2 hours 
+		}
+		stopwatch.stop();	
+		setEndTime(2);
+		Level.calcExp(user);			
+	}
 }
