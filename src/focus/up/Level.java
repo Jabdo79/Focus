@@ -10,11 +10,11 @@ public class Level {
 		//add previous experiences with new experience and set experience 
 		exp = Math.abs(user.getStartTime() - user.getEndTime()); 
 		user.setExp(user.getExp() + exp);  
-		//call the calcLevel method ???why
 		calcLevel(user);
 	}
 	//static because calcLevel formula is the same for each user 
 	public static void calcLevel(User user){
+		//totalExp only need to store once 
 		int totalExp = user.getExp();
 		if (totalExp < 10){
 			user.setLevel(1); 
