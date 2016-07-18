@@ -8,6 +8,7 @@ public class User {
 	private int startTime; 
 	private int endTime; 
 	private String studyAddress;
+	
 	public String getEmail() {
 		return email;
 	}
@@ -50,7 +51,4 @@ public class User {
 	public void setStudyAddress(String studyAddress) {
 		this.studyAddress = studyAddress;
 	} 
-	
-
-	
 }

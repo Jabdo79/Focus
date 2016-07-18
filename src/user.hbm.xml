@@ -14,4 +14,4 @@
 		<property name="topic" column="topic" type="string"></property>
 		<property name="studyAddress" column="studyAddress" type="string"></property>
 	</class>
-</hibernate-mapping>  
+</hibernate-mapping>

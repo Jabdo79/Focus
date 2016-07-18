@@ -4,14 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Focus</title>
+<title>FocusUP - Find a place to study, see what's being studied in your area</title>
 </head>
 <body>
 <div align="center">
 <h1>Focus UP!</h1>
-<form>
-<input type="text" placeholder="Search for Study Locations by City, State" width="70%">
-<button type="submit">Find Focus Spots!</button>
+<form action="focus_points.html" method="post">
+<input name="address" type="text" placeholder="Search for Study Locations by City, State" style="width:70%;">
+<br><br>
+<button type="submit">Find Focus Points!</button>
 </form>
 </div>
 
