@@ -67,7 +67,7 @@ public class User {
 			//do nothing for 2 hours 
 		}
 		stopwatch.stop();	
-		setEndTime(2);
+		setEndTime(getStartTime()+2);
 		Level.calcExp(user);			
 	}
 }
