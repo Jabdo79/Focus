@@ -18,7 +18,9 @@ public class Test {
 		System.out.println("Start time: ");
 		int aStartTime = scan.nextInt(); 
 		a.setStartTime(aStartTime);
-		
+		System.out.println(a.getExp());
+		a.cooldownTimer(a);
+		System.out.println(a.getExp());
 		System.out.println("End time: ");
 		int aEndTime = scan.nextInt();
 		a.setEndTime(aEndTime);
