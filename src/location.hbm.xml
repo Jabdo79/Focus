@@ -5,10 +5,9 @@
 
 <hibernate-mapping>
 <class name="focus.up.Location" table="locations">
-		<id name="id" column="id" type="int"><generator class="increment"></generator></id>
-		<property name="name" column="name" type="string"></property>
+		<id name="id" column="id" type="int"></id>
+		<property name="googleID" column="googleID" type="string"></property>
 		<property name="topics" column="topics" type="string"></property>
-		<property name="address" column="studyAddress" type="string"></property>
 		<property name="rating" column="rating" type="int"></property>
 	</class>
 </hibernate-mapping>

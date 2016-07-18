@@ -14,7 +14,7 @@
 	var userLoc;
 	var service;
 	var infowindow;
-	var locationsList = "";
+// 	var locationsList = "";
 
 	function initialize() {
 		userLoc = new google.maps.LatLng(
@@ -63,16 +63,16 @@
 			name : 'library'
 		}, iterateResults);
 
-		locationsList = "";
+// 		locationsList = "";
 	}
 
 	function iterateResults(results, status) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
 			for (var i = 0; i < results.length; i++) {
 				createMarker(results[i]);
-				createTextListing(results[i]);
+// 				createTextListing(results[i]);
 			}
-			document.getElementById("locations_list").innerHTML = locationsList;
+// 			document.getElementById("locations_list").innerHTML = locationsList;
 		}
 	}
 
@@ -89,11 +89,11 @@
 		});
 	}
 
-	function createTextListing(place) {
-		locationsList += place.name + "<br>";
-		locationsList += place.formatted_address + "id: " + place.place_id+ "<br>";
-		locationsList += "<input type=\"button\" value=\"Study Here\" name=\""+place.id+"\"><br><br>";
-	}
+// 	function createTextListing(place) {
+// 		locationsList += place.name + "<br>";
+// 		locationsList += place.formatted_address + "id: " + place.place_id+ "<br>";
+// 		locationsList += "<input type=\"button\" value=\"Study Here\" name=\""+place.id+"\"><br><br>";
+// 	}
 
 	function codeAddress() {
 		var address = document.getElementById("address").value;
@@ -130,15 +130,13 @@ html, body {
 <title>FocusUP - Places to study</title>
 </head>
 <body onload="initialize()">
+	<center><h1>FocusUP!</h1></center>
 	<div>
-		<input id="address" type="textbox" placeholder="Enter another address">
+		<input id="address" type="textbox" placeholder="Enter another address" onkeydown="if (event.keyCode == 13) { codeAddress();}">
 		<input type="button" value="Find Focus Points!"
 			onclick="codeAddress()">
+			Select a location below and click "Study Here"
 	</div>
 	<div id="map"></div>
-	<div>
-		<h4>Focus Points</h4>
-		<div id="locations_list"></div>
-	</div>
 </body>
 </html>

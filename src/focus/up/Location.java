@@ -1,28 +1,29 @@
 package focus.up;
 
 public class Location {
-	private String name;  
-	private String topic;  
-	private String address;  
+ 
+	private int id;
+	private String topics = "";  
+	private String googleID;  
 	private int rating;
 	
-	public String getName() {
-		return name;
+	public int getId() {
+		return id;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getTopic() {
-		return topic;
+	public String getTopics() {
+		return topics;
 	}
-	public void setTopic(String topic) {
-		this.topic = topic;
+	public void setTopics(String topics) {
+		this.topics += topics;
 	}
-	public String getAddress() {
-		return address;
+	public String getGoogleID() {
+		return googleID;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setGoogleID(String googleID) {
+		this.googleID = googleID;
 	}
 	public int getRating() {
 		return rating;
