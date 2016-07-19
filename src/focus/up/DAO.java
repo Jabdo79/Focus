@@ -65,8 +65,11 @@ public class DAO {
 			hibernateSession.save(location);
 		else {
 			// add topic to existing location
-			String gID = location.getGoogleID();
-			Location existing = hibernateSession.load(Location.class, gID);
+			Query query = hibernateSession.createQuery("FROM Location WHERE googleID = :gID ");
+			query.setParameter("gID", location.getGoogleID());
+			List<Location> results = query.list();
+			int id = results.get(0).getId();
+			Location existing = hibernateSession.load(Location.class, id);
 			if(existing.getTopics() == null)
 				existing.setTopics(location.getTopics()+"/t");
 			else

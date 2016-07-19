@@ -52,23 +52,36 @@
 				if (response.status === 'connected') {
 		    		document.getElementById('status').innerHTML = 'We are connected.';
 		    		document.getElementById('login').style.visibility = 'hidden';
+		    		
 		    	} else if (response.status === 'not_authorized') {
 		    		document.getElementById('status').innerHTML = 'We are not logged in.'
 		    	} else {
 		    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
 		    	}
-			}, {scope: 'email'});
+			}, {scope: 'email'}, {scope: 'public_profile'});
 		}
 		
 		// getting basic user info
 		function getInfo() {
-			FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id'}, function(response) {
+			FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,email'}, function(response) {
+				//response. calls the fields value 
 				document.getElementById('status').innerHTML = response.id;
+				document.getElementById('status').innerHTML = response.email;
 			});
 		}
+			
+		function getProfilePic(){
+			/* make the API call */
+			FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
+				document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
+			});
+		}
+		
+	
 	</script>
 	<div id="status"></div>
 	<button onclick="getInfo()">Get Info</button>
 	<button onclick="login()" id="login">Login</button>
+	<button onclick="getProfilePic()">Get ProfilePic</button>
 </body>
 </html>
