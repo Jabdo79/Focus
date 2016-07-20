@@ -88,4 +88,23 @@ public class FocusUpController {
 		model.addAttribute("broadcast", broadcast);
 		return "profile";
 	}
+	
+	@RequestMapping("/stop_studying")
+	public String removeBroadcast(Model model, HttpServletRequest request){
+		long fbID = Long.parseLong(request.getParameter("fbID"));
+		int endTime = Integer.parseInt(request.getParameter("endTime"));
+		
+		//calc exp for user from start time
+		User user = DAO.getUser(fbID);
+		Broadcast broadcast = DAO.getBroadcast(fbID);
+		Level.calcExp(user, broadcast.getStartTime(), endTime);
+		
+		//submit rating for location
+		
+		
+		//remove broadcast for logged in user
+		DAO.removeBroadcast(fbID);
+		
+		return "profile";
+	}
 }

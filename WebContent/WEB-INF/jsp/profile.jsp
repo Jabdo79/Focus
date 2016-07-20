@@ -73,8 +73,12 @@ function getProfilePic(){
 		var img = document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
 	});
 }
-
-
+</script>
+<script>
+function getTime(){
+	var d = new Date();
+	document.getElementById('endTime').value = d.getHours();
+}
 </script>
 
 <title>Focus UP! - Profile</title>
@@ -93,7 +97,7 @@ function getProfilePic(){
 	</div>
 
 <h1>Focus UP! - Profile</h1>
-
+<form action="stop_studying.html" method="post">
 	<table>
 		<tr>
 			<td>Studying: "${broadcast.topic}"</td>
@@ -107,10 +111,12 @@ function getProfilePic(){
 			</select></td>
 		</tr>
 		<tr>
-			<td><input type="button" onclick="" value="Stop Studying"/></td>
+			<td><input type="button" onclick="getTime(); " value="Stop Studying"/></td>
 		</tr>
 	</table>
-
+	<input type="hidden" id="fbID" name="fbID" value="${broadcast.fbID}">
+	<input type="hidden" id="endTime" name="endTime">
+</form>
 
 
 

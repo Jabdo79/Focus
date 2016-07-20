@@ -82,7 +82,23 @@ public class DAO {
 		return true;
 	}
 	
-	public static void deleteBroadcast(long fbID) {
+	public static Broadcast getBroadcast(long fbID){
+		if (factory == null)
+			setupFactory();
+		
+		Session hibernateSession = factory.getCurrentSession();
+		hibernateSession.beginTransaction();
+		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
+		List<Broadcast> results = query.setParameter("fbID", fbID).list();
+		Broadcast existing = results.get(0);
+		
+		return existing;
+	}
+	
+	public static void removeBroadcast(long fbID) {
+		if (factory == null)
+			setupFactory();
+		
 		Session hibernateSession = factory.getCurrentSession();
 		hibernateSession.beginTransaction();
 		
@@ -93,5 +109,18 @@ public class DAO {
 		
 		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
+	}
+	
+	public static User getUser(long fbID){
+		if (factory == null)
+			setupFactory();
+		
+		Session hibernateSession = factory.getCurrentSession();
+		hibernateSession.beginTransaction();
+		Query query = hibernateSession.createQuery("FROM User WHERE fbID = :fbID ");
+		List<User> results = query.setParameter("fbID", fbID).list();
+		User existing = results.get(0);
+		
+		return existing;
 	}
 }

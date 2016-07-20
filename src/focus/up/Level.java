@@ -3,12 +3,17 @@ package focus.up;
 public class Level {
 	
 	//static because calcExp formula is the same for each user 
-	public static void calcExp(User user, Broadcast broadcast, int endTime){
+	public static void calcExp(User user, int startTime, int endTime){
 		int exp; 
-		//calculate studying time duration
-		//time is in hours 
-		//add previous experiences with new experience and set experience 
-		exp = Math.abs(broadcast.getStartTime() - endTime); 
+		//if they start and end in the same hour increase endtime by 1 so they gain 1 exp
+		if(startTime == endTime)
+			endTime+=1;
+		
+		exp = Math.abs(startTime - endTime); 
+		//if they studied more than 3 hours they get max exp of 3 and a message that they should take a break sooner
+		if(exp >= 3)
+			exp = 3;
+		
 		user.setExp(user.getExp() + exp);  
 		calcLevel(user);
 	}
