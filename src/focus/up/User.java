@@ -13,7 +13,6 @@ public class User {
 		return id;
 	}
 
-
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -24,7 +23,7 @@ public class User {
 	}
 
 
-	public void setNamr(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
