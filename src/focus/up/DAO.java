@@ -75,6 +75,8 @@ public class DAO {
 		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
 		query.setParameter("fbID", broadcast.getFbID());
 		List results = query.list();
+		
+		hibernateSession.close();
 
 		if (results.isEmpty())
 			return false;
@@ -91,6 +93,8 @@ public class DAO {
 		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
 		List<Broadcast> results = query.setParameter("fbID", fbID).list();
 		Broadcast existing = results.get(0);
+		
+		hibernateSession.close();
 		
 		return existing;
 	}
@@ -121,6 +125,32 @@ public class DAO {
 		List<User> results = query.setParameter("fbID", fbID).list();
 		User existing = results.get(0);
 		
+		hibernateSession.close();
+		
 		return existing;
+	}
+	
+	public static void addRating(String gID, int rating){
+		if (factory == null)
+			setupFactory();
+		
+		Session hibernateSession = factory.getCurrentSession();
+		hibernateSession.beginTransaction();
+		Query query = hibernateSession.createQuery("FROM Location WHERE gID = :gID ");
+		List<Location> results = query.setParameter("gID", gID).list();
+		Location existing = results.get(0);
+		
+		if(existing == null){
+			existing = new Location();
+			existing.setGoogleID(gID);
+			existing.setRating(rating);
+			hibernateSession.save(existing);
+		}
+		else{
+			existing.setRating(rating);
+			hibernateSession.merge(existing);
+		}
+		
+		hibernateSession.close();
 	}
 }

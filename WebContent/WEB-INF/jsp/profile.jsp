@@ -79,11 +79,16 @@ function getTime(){
 	var d = new Date();
 	document.getElementById('endTime').value = d.getHours();
 }
+
+function checkStudying(){
+	if("${broadcast.topic}".length > 0)
+		document.getElementById('studying').style.visibility = "visible";
+}
 </script>
 
 <title>Focus UP! - Profile</title>
 </head>
-<body>
+<body onload="checkStudying()">
 <!-- Facebook Login UI -->
 	<div align="right">
 		<table>
@@ -97,12 +102,13 @@ function getTime(){
 	</div>
 
 <h1>Focus UP! - Profile</h1>
+<div id="studying" style="visibility: hidden">
 <form action="stop_studying.html" method="post">
 	<table>
 		<tr>
 			<td>Studying: "${broadcast.topic}"</td>
 			<td><select name="rating">
-					<option value="null">Rate your location</option>
+					<option value="0">Rate your location</option>
 					<option value="5">5</option>
 					<option value="4">4</option>
 					<option value="3">3</option>
@@ -111,12 +117,13 @@ function getTime(){
 			</select></td>
 		</tr>
 		<tr>
-			<td><input type="button" onclick="getTime(); " value="Stop Studying"/></td>
+			<td><input type="submit" onclick="getTime(); " value="Stop Studying"/></td>
 		</tr>
 	</table>
 	<input type="hidden" id="fbID" name="fbID" value="${broadcast.fbID}">
 	<input type="hidden" id="endTime" name="endTime">
 </form>
+</div>
 
 
 

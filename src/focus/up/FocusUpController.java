@@ -93,6 +93,7 @@ public class FocusUpController {
 	public String removeBroadcast(Model model, HttpServletRequest request){
 		long fbID = Long.parseLong(request.getParameter("fbID"));
 		int endTime = Integer.parseInt(request.getParameter("endTime"));
+		int rating = Integer.parseInt(request.getParameter("rating"));
 		
 		//calc exp for user from start time
 		User user = DAO.getUser(fbID);
@@ -100,7 +101,8 @@ public class FocusUpController {
 		Level.calcExp(user, broadcast.getStartTime(), endTime);
 		
 		//submit rating for location
-		
+		if(rating > 0)
+			DAO.addRating(broadcast.getGoogleID(), rating);
 		
 		//remove broadcast for logged in user
 		DAO.removeBroadcast(fbID);
