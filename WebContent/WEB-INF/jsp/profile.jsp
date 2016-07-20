@@ -94,6 +94,26 @@ function getProfilePic(){
 
 <h1>Focus UP! - Profile</h1>
 
+	<table>
+		<tr>
+			<td>Studying: "${broadcast.topic}"</td>
+			<td><select name="rating">
+					<option value="null">Rate your location</option>
+					<option value="5">5</option>
+					<option value="4">4</option>
+					<option value="3">3</option>
+					<option value="2">2</option>
+					<option value="1">1</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td><input type="button" onclick="" value="Stop Studying"/></td>
+		</tr>
+	</table>
+
+
+
+
 
 </body>
 </html>

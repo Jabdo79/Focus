@@ -85,6 +85,7 @@ public class FocusUpController {
 	@RequestMapping("/start_studying")
 	public String broadcastLocation(@ModelAttribute("command") Broadcast broadcast, Model model){
 		DAO.addBroadcast(broadcast);
+		model.addAttribute("broadcast", broadcast);
 		return "profile";
 	}
 }
