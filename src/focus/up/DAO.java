@@ -123,7 +123,14 @@ public class DAO {
 		hibernateSession.beginTransaction();
 		Query query = hibernateSession.createQuery("FROM User WHERE fbID = :fbID ");
 		List<User> results = query.setParameter("fbID", fbID).list();
-		User existing = results.get(0);
+		
+		User existing;
+		if(results.size()<1){
+			existing = new User();
+			existing.setFbID(fbID);
+		}else{
+			existing = results.get(0);
+		}
 		
 		hibernateSession.close();
 		
@@ -136,17 +143,18 @@ public class DAO {
 		
 		Session hibernateSession = factory.getCurrentSession();
 		hibernateSession.beginTransaction();
-		Query query = hibernateSession.createQuery("FROM Location WHERE gID = :gID ");
+		Query query = hibernateSession.createQuery("FROM Location WHERE googleID = :gID ");
 		List<Location> results = query.setParameter("gID", gID).list();
-		Location existing = results.get(0);
 		
-		if(existing == null){
+		Location existing;
+		if(results.size()<1){
 			existing = new Location();
 			existing.setGoogleID(gID);
 			existing.setRating(rating);
 			hibernateSession.save(existing);
 		}
 		else{
+			existing = results.get(0);
 			existing.setRating(rating);
 			hibernateSession.merge(existing);
 		}

@@ -72,12 +72,12 @@ function submitFrm(){
 		<table>
 			<tr>
 				<td><div id="status"></div></td>
-				<td><button onclick="submitFrm()" id="continue" style="visibility: hidden">Continue</button>
+				<td><button onclick="submitFrm()" id="continue" style="visibility: hidden">Return to Front Page</button>
 				<button onclick="login()" id="login">Login</button></td>
 			</tr>
 		</table>
 	</div>
-<form action="study_here.html?id=${googleID}" method="post" id="hiddenForm">
+<form action="index.html" method="post" id="hiddenForm">
 <input type="hidden" name="fbID" id="fbID" value=""></input></form>
 </body>
 </html>

@@ -31,6 +31,14 @@ public class FocusUpController {
 		
 		return "index";
 	}
+	
+	//IN PROGRESS**********************************************************
+	@RequestMapping("/log_in.html")
+	public String logIn(Model model, HttpServletRequest request) {
+		
+		
+		return "index";
+	}
 
 	@RequestMapping("/focus_points")
 	public String map(@RequestParam("address") String address, Model model)
