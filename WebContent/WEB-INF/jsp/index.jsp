@@ -54,6 +54,13 @@ function getInfo() {
 	});
 	setTimeout(function(){ submitFrm(); }, 3000);
 }
+
+function getProfilePic(){
+	/* make the API call */
+	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
+		document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
+	});
+}
 </script>
 <script type="text/javascript">
 function submitFrm(){
@@ -72,6 +79,7 @@ function submitFrm(){
 		<table>
 			<tr>
 				<td><div id="status"></div></td>
+				<td><button onclick="getProfilePic()">Get ProfilePic</button></td>
 				<td><button onclick="login()" id="login">Login</button></td>
 			</tr>
 		</table>

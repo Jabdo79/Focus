@@ -40,40 +40,6 @@ public class DAO {
 		// Create session factory instance
 		factory = configuration.buildSessionFactory(serviceRegistry);
 	}
-
-	/*public static void addRating(Location location) {
-		if (factory == null)
-			setupFactory();
-
-		Session hibernateSession = factory.openSession();
-		hibernateSession.getTransaction().begin();
-
-		if (!containsLocation(location))
-			hibernateSession.save(location);
-		else {
-			
-		}
-
-		hibernateSession.getTransaction().commit();
-		hibernateSession.close();
-	}
-
-	public static boolean containsLocation(Location location) {
-		if (factory == null)
-			setupFactory();
-
-		Session hibernateSession = factory.openSession();
-		hibernateSession.getTransaction().begin();
-
-		Query query = hibernateSession.createQuery("FROM Location WHERE googleID = :gID ");
-		query.setParameter("gID", location.getGoogleID());
-		List results = query.list();
-
-		if (results.isEmpty())
-			return false;
-
-		return true;
-	}*/
 	
 	public static void addBroadcast(Broadcast broadcast) {
 		if (factory == null)
