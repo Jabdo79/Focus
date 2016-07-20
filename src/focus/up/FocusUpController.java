@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
@@ -19,14 +21,21 @@ import org.springframework.web.servlet.ModelAndView;
 public class FocusUpController {
 
 	@RequestMapping("/index")
-	public ModelAndView index() {
-		return new ModelAndView("index", "message", "Welcome to Focus UP!");
+	public String index(Model model, HttpServletRequest request) {
+		String fbString = request.getParameter("fbID");
+		long fbID=0;
+		if(fbString!=null){
+			fbID = Long.parseLong(fbString);
+			model.addAttribute("fbID", fbID);
+		}
+		
+		return "index";
 	}
 
 	@RequestMapping("/focus_points")
 	public String map(@RequestParam("address") String address, Model model)
 			throws FileNotFoundException, IOException, ParseException {
-
+		
 		JSONParser parser = new JSONParser();
 		Object obj;
 		address.trim();
@@ -39,34 +48,6 @@ public class FocusUpController {
 		String jGeoString = getJson(geoUrl);
 		model.addAttribute("jGeocode", jGeoString);
 		return "map";
-		/*JSONObject jGeocode = (JSONObject) parser.parse(jGeoString);
-		JSONArray results = (JSONArray) jGeocode.get("results");
-		JSONObject geometry = (JSONObject) results.get(0);
-		JSONObject location = (JSONObject) geometry.get("location");
-		String sLat = (String) location.get("lat");
-		String sLng = (String) location.get("lng");
-		
-		// get json search results from places api
-		URL search = new URL(
-				"https://maps.googleapis.com/maps/api/place/radarsearch/json?location="+sLat+","+sLng+"&radius=2500&name=(starbucks|panera)&key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA");
-		String jSearch = getJson(search);
-		model.addAttribute("jSearch", jSearch);
-
-		JSONObject data = (JSONObject) jsonObject.get("data");
-
-		JSONArray posts = (JSONArray) data.get("children");
-
-		// loop array
-		Iterator<JSONObject> iterator = posts.iterator();
-		while (iterator.hasNext()) {
-			JSONObject child = (JSONObject) iterator.next().get("data");
-			String title = (String) child.get("title");
-			System.out.println("Title: " + title);
-			String link = (String) child.get("permalink");
-			System.out.println("Link: " + link + "\n");
-		}
-
-		model.addAttribute("address", address);*/
 	}
 
 	public String getJson(URL url) throws IOException {
@@ -79,19 +60,31 @@ public class FocusUpController {
 		return json;
 	}
 	
-	@RequestMapping("study_here")
-	public String createStudyHereForm(@RequestParam String id, Model model){
-		//fields for form are topic, user id, start time, and location id.
+	@RequestMapping("/study_here")
+	public String createStudyHereForm(Model model, HttpServletRequest request){
+		String id = request.getParameter("id");
 		model.addAttribute("googleID", id);
-		model.addAttribute("command", new Location());
 		
-		return "studyHereForm";
+		if(model.containsAttribute("fbID")){
+			return "studyHereForm";
+		}
+		
+		String fbString = request.getParameter("fbID");
+		long fbID=0;
+		if(fbString!=null){
+			fbID = Long.parseLong(fbString);
+			model.addAttribute("fbID", fbID);
+			model.addAttribute("command", new Broadcast());
+			
+			return "studyHereForm";
+		}	
+		
+		return "log_in";	
 	}
 	
-	@RequestMapping("start_studying.html")
-	public String announceStudyLocation(@ModelAttribute("command") Location location, Model model){
-		DAO.addTopic(location);
-		
+	@RequestMapping("/start_studying")
+	public String broadcastLocation(@ModelAttribute("command") Broadcast broadcast, Model model){
+		DAO.addBroadcast(broadcast);
 		return "profile";
 	}
 }

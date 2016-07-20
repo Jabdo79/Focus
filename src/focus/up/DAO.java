@@ -29,6 +29,9 @@ public class DAO {
 
 		// setup file for Location class
 		configuration.addResource("location.hbm.xml");
+		
+		// setup file for Broadcast class
+		configuration.addResource("broadcast.hbm.xml");
 
 		// Since version 4.x, service registry is being used
 		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -38,23 +41,7 @@ public class DAO {
 		factory = configuration.buildSessionFactory(serviceRegistry);
 	}
 
-	public static boolean addUser(User user) {
-		if (factory == null)
-			setupFactory();
-
-		Session hibernateSession = factory.openSession();
-		hibernateSession.getTransaction().begin();
-
-		// save this specific record
-		int i = (Integer) hibernateSession.save(user);
-
-		hibernateSession.getTransaction().commit();
-		hibernateSession.close();
-
-		return true;
-	}
-
-	public static void addTopic(Location location) {
+	/*public static void addRating(Location location) {
 		if (factory == null)
 			setupFactory();
 
@@ -64,14 +51,7 @@ public class DAO {
 		if (!containsLocation(location))
 			hibernateSession.save(location);
 		else {
-			// add topic to existing location
-			String gID = location.getGoogleID();
-			Location existing = hibernateSession.load(Location.class, gID);
-			if(existing.getTopics() == null)
-				existing.setTopics(location.getTopics()+"/t");
-			else
-				existing.setTopics(existing.getTopics()+location.getTopics()+"/t");
-			hibernateSession.merge(existing);
+			
 		}
 
 		hibernateSession.getTransaction().commit();
@@ -93,5 +73,59 @@ public class DAO {
 			return false;
 
 		return true;
+	}*/
+	
+	public static void addBroadcast(Broadcast broadcast) {
+		if (factory == null)
+			setupFactory();
+
+		Session hibernateSession = factory.openSession();
+		hibernateSession.getTransaction().begin();
+
+		if (!containsBroadcast(broadcast))
+			hibernateSession.save(broadcast);
+		else {
+			// change topic/location/time for user
+			Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
+			List<Broadcast> results = query.setParameter("fbID", broadcast.getFbID()).list();
+			Broadcast existing = results.get(0);
+			existing.setTopic(broadcast.getTopic());
+			existing.setGoogleID(broadcast.getGoogleID());
+			existing.setStartTime(broadcast.getStartTime());
+			hibernateSession.merge(existing);
+		}
+
+		hibernateSession.getTransaction().commit();
+		hibernateSession.close();
+	}
+
+	public static boolean containsBroadcast(Broadcast broadcast) {
+		if (factory == null)
+			setupFactory();
+
+		Session hibernateSession = factory.openSession();
+		hibernateSession.getTransaction().begin();
+
+		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
+		query.setParameter("fbID", broadcast.getFbID());
+		List results = query.list();
+
+		if (results.isEmpty())
+			return false;
+
+		return true;
+	}
+	
+	public static void deleteBroadcast(long fbID) {
+		Session hibernateSession = factory.getCurrentSession();
+		hibernateSession.beginTransaction();
+		
+		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
+		List<Broadcast> results = query.setParameter("fbID", fbID).list();
+		Broadcast existing = results.get(0);
+		hibernateSession.delete(existing);
+		
+		hibernateSession.getTransaction().commit();
+		hibernateSession.close();
 	}
 }

@@ -6,12 +6,9 @@
 <hibernate-mapping>
 <class name="focus.up.User" table="users">
 		<id name="id" column="id" type="int"><generator class="increment"></generator></id>
-		<property name="email" column="email" type="string"></property>
+		<property name="name" column="name" type="string"></property>
 		<property name="level" column="level" type="int"></property>
 		<property name="exp" column="exp" type="int"></property>
-		<property name="startTime" column="startTime" type="int"></property>
-		<property name="endTime" column="endTime" type="int"></property>
-		<property name="topic" column="topic" type="string"></property>
-		<property name="studyAddress" column="studyAddress" type="string"></property>
+		<property name="fbID" column="fbID" type="long"></property>
 	</class>
 </hibernate-mapping>

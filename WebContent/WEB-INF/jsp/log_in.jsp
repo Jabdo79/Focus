@@ -3,7 +3,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <!-- Facebook Login Script -->
 <script>
 //initialize and setup facebook js sdk
@@ -15,8 +14,10 @@ window.fbAsyncInit = function() {
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'We are connected.';
+    		document.getElementById('status').innerHTML = 'Thank you for logging in.';
     		document.getElementById('login').style.visibility = 'hidden';
+    		document.getElementById('continue').style.visibility = 'visible';
+    		getInfo();
     	} else if (response.status === 'not_authorized') {
     		document.getElementById('status').innerHTML = 'We are not logged in.'
     	} else {
@@ -38,6 +39,7 @@ function login() {
 		if (response.status === 'connected') {
     		document.getElementById('status').innerHTML = 'Thank you for logging in.';
     		document.getElementById('login').style.visibility = 'hidden';
+    		document.getElementById('continue').style.visibility = 'visible';
     		getInfo();
     	} else if (response.status === 'not_authorized') {
     		document.getElementById('status').innerHTML = 'We are not logged in.'
@@ -47,12 +49,11 @@ function login() {
 	}, {scope: 'email'});
 }
 
-//getting basic user info then submitting form
+// getting basic user info then submitting form
 function getInfo() {
 	FB.api('/me', 'GET', {fields: 'id'}, function(response) {
 		document.getElementById('fbID').value = response.id;
 	});
-	setTimeout(function(){ submitFrm(); }, 3000);
 }
 </script>
 <script type="text/javascript">
@@ -60,33 +61,23 @@ function submitFrm(){
 	document.getElementById("hiddenForm").submit();
 }
 </script>
-
-
-<title>FocusUP - Find a place to study, see what's being studied in your area</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>FocusUP - Log In</title>
 </head>
-
-
 <body>
+<h1 align="center">FocusUP - Log In</h1>
+<p align="center">Please log in via facebook to continue.</p>
 <!-- Facebook Login UI -->
 	<div align="center">
 		<table>
 			<tr>
 				<td><div id="status"></div></td>
-				<td><button onclick="login()" id="login">Login</button></td>
+				<td><button onclick="submitFrm()" id="continue" style="visibility: hidden">Continue</button>
+				<button onclick="login()" id="login">Login</button></td>
 			</tr>
 		</table>
 	</div>
-<form action="index.html" method="post" id="hiddenForm">
-<input type="hidden" name="fbID" id="fbID"></input></form>
-
-<div align="center">
-<h1>Focus UP!</h1>${fbID}
-
-<form action="focus_points.html" method="post">
-<input name="address" type="text" placeholder="Search for Study Locations by City, State" style="width:70%;">
-<br><br>
-<button type="submit">Find Focus Points!</button>
-</form>
-</div>
+<form action="study_here.html?id=${googleID}" method="post" id="hiddenForm">
+<input type="hidden" name="fbID" id="fbID" value=""></input></form>
 </body>
 </html>

@@ -5,7 +5,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		
-		Scanner scan = new Scanner(System.in);
+		/*Scanner scan = new Scanner(System.in);
 		User a = new User();
 		
 		System.out.println("Please enter your name");
@@ -27,7 +27,7 @@ public class Test {
 		Level.calcExp(a); 
 		
 		System.out.println(a.getEmail() + " your updated level is " + a.getLevel());
-		scan.close();
+		scan.close();*/
 	}
 
 }

@@ -4,9 +4,11 @@
  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-<class name="focus.up.Location" table="locations">
+<class name="focus.up.Broadcast" table="broadcasts">
 		<id name="id" column="id" type="int"><generator class="increment"></generator></id>
 		<property name="googleID" column="googleID" type="string"></property>
-		<property name="rating" column="rating" type="int"></property>
+		<property name="topic" column="topic" type="string"></property>
+		<property name="fbID" column="fbID" type="long"></property>
+		<property name="startTime" column="startTime" type="int"></property>
 	</class>
 </hibernate-mapping>
