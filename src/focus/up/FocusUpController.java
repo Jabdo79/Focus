@@ -83,6 +83,11 @@ public class FocusUpController {
 		
 		DAO.loadActiveTopics(allResults);
 		//convert allResults to json
+		JSONArray jAllResults = new JSONArray();
+		jAllResults.addAll(allResults); 
+		
+		String jAllResultsString = jAllResults.toJSONString();
+		model.addAttribute("jAllResultsString", jAllResultsString);
 		
 		return "map";
 	}
