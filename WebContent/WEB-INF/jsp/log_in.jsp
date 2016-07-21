@@ -33,7 +33,7 @@ window.fbAsyncInit = function() {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-//login with facebook with extra permissions
+//login with facebook with extra permissions, button pressed
 function login() {
 	FB.login(function(response) {
 		if (response.status === 'connected') {
@@ -41,6 +41,13 @@ function login() {
     		document.getElementById('login').style.visibility = 'hidden';
     		document.getElementById('continue').style.visibility = 'visible';
     		getInfo();
+    		//create cookie to store FaceBook ID 
+    		Cookie fbID = new Cookie("fbID", document.getElementById('fbID'));
+    		//cookie destroyed in 1 min for TEST purposes 
+    		fbID.setMaxAge(60);
+    		response.addCookie(fbID);
+    		//return the user logged in to my profile page 
+    		return "profile"; 
     	} else if (response.status === 'not_authorized') {
     		document.getElementById('status').innerHTML = 'We are not logged in.'
     	} else {
@@ -65,10 +72,23 @@ function submitFrm(){
 <title>FocusUP - Log In</title>
 </head>
 <body>
+<%
+	String loggedIn = null; 
+	Cookie[] cookies = request.getCookies(); 
+	if (cookies != null){
+		for (Cookie fbID : cookies){
+			if (fbID.getName().equals("loggedIn") && Double.parseDouble(fbID.getValue())>0)
+					loggedIn = fbID.getValue();
+		}
+	}
+	if (loggedIn == null)
+		response.sendRedirect("log_in.html");
+%>
 <h1 align="center">FocusUP - Log In</h1>
 <p align="center">Please log in via facebook to continue.</p>
 <!-- Facebook Login UI -->
 	<div align="center">
+		<form action="submitLogin.html" method="post" id="hiddenForm">
 		<table>
 			<tr>
 				<td><div id="status"></div></td>
@@ -77,7 +97,7 @@ function submitFrm(){
 			</tr>
 		</table>
 	</div>
-<form action="index.html" method="post" id="hiddenForm">
-<input type="hidden" name="fbID" id="fbID" value=""></input></form>
+
+<input type="hidden" name="fbID" id="fbID" ></input></form>
 </body>
 </html>

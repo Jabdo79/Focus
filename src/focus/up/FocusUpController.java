@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,9 +17,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class FocusUpController {
@@ -35,13 +39,22 @@ public class FocusUpController {
 	}
 	
 	//IN PROGRESS**********************************************************
-	@RequestMapping("/log_in")
-	public String logIn(Model model, HttpServletRequest request) {
-		
-		
-		return "index";
+	@RequestMapping("/submitLogin")
+	public String logIn(Model model, @CookieValue(value = "loggedIn", defaultValue = "false") String loggedIn, 
+			HttpServletResponse response, HttpServletRequest request) {
+		String fbString = request.getParameter("fbID");
+				if(fbString.length()<1){
+					return "log_in";
+				}
+				Cookie cookie = new Cookie("fbID", fbString);
+				response.addCookie(cookie);
+				model.addAttribute("cookie", cookie);
+		return "profile";
 	}
-
+	@RequestMapping("/log_in")
+	public ModelAndView createLogin(Model model) {
+		return new ModelAndView("log_in", "test", model);
+	}
 	@RequestMapping("/focus_points")
 	public String map(@RequestParam("address") String address, Model model)
 			throws FileNotFoundException, IOException, ParseException {

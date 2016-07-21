@@ -80,7 +80,7 @@ function submitFrm(){
 			<tr>
 				<td><div id="status"></div></td>
 				<td><button onclick="getProfilePic()">Get ProfilePic</button></td>
-				<td><button onclick="login()" id="login">Login</button></td>
+				<td><button onclick="log_in.html" id="login">Login</button><a href = "login.html">log in</a></td>
 			</tr>
 		</table>
 	</div>
