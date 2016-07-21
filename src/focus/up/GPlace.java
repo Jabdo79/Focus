@@ -1,7 +1,10 @@
 package focus.up;
 
+import java.util.ArrayList;
+
 public class GPlace {
-	private String name, googleID, topics;
+	private String name, googleID;
+	private ArrayList<String> topics;
 	private double lat, lng;
 	
 	public String getName() {
@@ -16,11 +19,11 @@ public class GPlace {
 	public void setGoogleID(String googleID) {
 		this.googleID = googleID;
 	}
-	public String getTopics() {
+	public ArrayList<String> getTopics() {
 		return topics;
 	}
 	public void setTopics(String topics) {
-		this.topics = topics;
+		this.topics.add(topics);
 	}
 	public double getLat() {
 		return lat;

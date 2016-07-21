@@ -1,5 +1,6 @@
 package focus.up;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -161,4 +162,35 @@ public class DAO {
 		
 		hibernateSession.close();
 	}
+	
+	public static void loadActiveTopics(ArrayList<GPlace> allResults){
+		if (factory == null)
+			setupFactory();
+		
+		Session hibernateSession = factory.getCurrentSession();
+		hibernateSession.beginTransaction();
+		
+		//get a list of all active topics for a googleID
+		for(int i=0; i<allResults.size(); i++){
+			Query query = hibernateSession.createQuery("SELECT topic FROM Broadcast WHERE googleID = :gID ");
+			List<String> topics = query.setParameter("gID", allResults.get(i).getGoogleID()).list();
+			
+			//add all the active topics to the GPlace with matching googleID
+			for(int j=0; j<topics.size(); j++){
+				allResults.get(i).setTopics(topics.get(j));
+			}
+		}
+		hibernateSession.close();	
+	}
 }
+
+
+
+
+
+
+
+
+
+
+

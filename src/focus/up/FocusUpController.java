@@ -81,7 +81,8 @@ public class FocusUpController {
 		fillResultsList(jPanera, allResults);
 		fillResultsList(jLibrary, allResults);
 		
-		//DAO.loadActiveTopics(allResults);
+		DAO.loadActiveTopics(allResults);
+		//convert allResults to json
 		
 		return "map";
 	}
