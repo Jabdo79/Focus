@@ -5,9 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
@@ -15,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class FocusUpController {
@@ -33,7 +35,7 @@ public class FocusUpController {
 	}
 	
 	//IN PROGRESS**********************************************************
-	@RequestMapping("/log_in.html")
+	@RequestMapping("/log_in")
 	public String logIn(Model model, HttpServletRequest request) {
 		
 		
@@ -45,7 +47,6 @@ public class FocusUpController {
 			throws FileNotFoundException, IOException, ParseException {
 		
 		JSONParser parser = new JSONParser();
-		Object obj;
 		address.trim();
 		address = address.replaceAll("\\s","+");
 		
@@ -55,6 +56,33 @@ public class FocusUpController {
 						+ address);
 		String jGeoString = getJson(geoUrl);
 		model.addAttribute("jGeocode", jGeoString);
+
+		//parse json obj jGeoString
+		JSONObject jGeocode = (JSONObject) parser.parse(jGeoString);
+		JSONArray results = (JSONArray) jGeocode.get("results");
+		JSONObject geometry = (JSONObject) results.get(0);
+		JSONObject location = (JSONObject) geometry.get("location");
+		String sLat = (String) location.get("lat");
+		String sLng = (String) location.get("lng");
+
+		URL starbucks = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=starbucks");
+		URL dunkin = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=dunkin+donuts");
+		URL panera = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=panera");
+		URL library = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=library");
+		
+		String jStarbucks = getJson(starbucks);
+		String jDunkin = getJson(dunkin);
+		String jPanera = getJson(panera);
+		String jLibrary = getJson(library);
+		
+		ArrayList<GPlace> allResults = new ArrayList<GPlace>();
+		fillResultsList(jStarbucks, allResults);
+		fillResultsList(jDunkin, allResults);
+		fillResultsList(jPanera, allResults);
+		fillResultsList(jLibrary, allResults);
+		
+		//DAO.loadActiveTopics(allResults);
+		
 		return "map";
 	}
 
@@ -66,6 +94,27 @@ public class FocusUpController {
 		}
 		bReader.close();
 		return json;
+	}
+	
+	public void fillResultsList(String jSearch, ArrayList<GPlace> allResults) throws ParseException{
+		JSONParser parser = new JSONParser();
+		
+		JSONObject jObject = (JSONObject) parser.parse(jSearch);
+		JSONArray jResults = (JSONArray) jObject.get("results");
+		
+		for(int i=0; i<jResults.size(); i++){
+			GPlace gPlace = new GPlace();
+			JSONObject currentListing = (JSONObject) jResults.get(i);
+			JSONObject geometry = (JSONObject) currentListing.get("geometry");
+			JSONObject location = (JSONObject) geometry.get("location");
+			
+			gPlace.setLat((double) location.get("lat"));
+			gPlace.setLng((double) location.get("lng"));		
+			gPlace.setName((String) currentListing.get("name"));
+			gPlace.setGoogleID((String) currentListing.get("place_id"));
+			
+			allResults.add(gPlace);
+		}
 	}
 	
 	@RequestMapping("/study_here")

@@ -82,7 +82,8 @@ function initialize() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		center : userLoc,
 		zoom : 13,
-		scrollwheel : false
+		scrollwheel : false,
+		draggable : false
 	});
 	//add marker for user location
 	//customize markers for each type of location
