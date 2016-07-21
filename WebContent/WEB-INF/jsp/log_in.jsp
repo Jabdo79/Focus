@@ -14,10 +14,10 @@ window.fbAsyncInit = function() {
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in.';
+    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to the front page in 5 seconds.';
     		document.getElementById('login').style.visibility = 'hidden';
-    		document.getElementById('continue').style.visibility = 'visible';
     		getInfo();
+    		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
     		document.getElementById('status').innerHTML = 'We are not logged in.'
     	} else {
@@ -37,17 +37,10 @@ window.fbAsyncInit = function() {
 function login() {
 	FB.login(function(response) {
 		if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in.';
+    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to the front page in 5 seconds.';
     		document.getElementById('login').style.visibility = 'hidden';
-    		document.getElementById('continue').style.visibility = 'visible';
     		getInfo();
-    		//create cookie to store FaceBook ID 
-    		Cookie fbID = new Cookie("fbID", document.getElementById('fbID'));
-    		//cookie destroyed in 1 min for TEST purposes 
-    		fbID.setMaxAge(60);
-    		response.addCookie(fbID);
-    		//return the user logged in to my profile page 
-    		return "profile"; 
+    		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
     		document.getElementById('status').innerHTML = 'We are not logged in.'
     	} else {
@@ -62,8 +55,8 @@ function getInfo() {
 		document.getElementById('fbID').value = response.id;
 	});
 }
-</script>
-<script type="text/javascript">
+
+//submits form
 function submitFrm(){
 	document.getElementById("hiddenForm").submit();
 }
@@ -72,32 +65,19 @@ function submitFrm(){
 <title>FocusUP - Log In</title>
 </head>
 <body>
-<%
-	String loggedIn = null; 
-	Cookie[] cookies = request.getCookies(); 
-	if (cookies != null){
-		for (Cookie fbID : cookies){
-			if (fbID.getName().equals("loggedIn") && Double.parseDouble(fbID.getValue())>0)
-					loggedIn = fbID.getValue();
-		}
-	}
-	if (loggedIn == null)
-		response.sendRedirect("log_in.html");
-%>
 <h1 align="center">FocusUP - Log In</h1>
-<p align="center">Please log in via facebook to continue.</p>
+<p align="center">Please log in via Facebook to continue.</p>
 <!-- Facebook Login UI -->
 	<div align="center">
-		<form action="submitLogin.html" method="post" id="hiddenForm">
 		<table>
 			<tr>
 				<td><div id="status"></div></td>
-				<td><button onclick="submitFrm()" id="continue" style="visibility: hidden">Return to Front Page</button>
-				<button onclick="login()" id="login">Login</button></td>
+				<td><button onclick="login()" id="login">Login</button></td>
 			</tr>
 		</table>
 	</div>
-
-<input type="hidden" name="fbID" id="fbID" ></input></form>
+	
+<form action="submit_login.html" method="post" id="hiddenForm">
+<input type="hidden" name="fbID" id="fbID"></input></form>
 </body>
 </html>

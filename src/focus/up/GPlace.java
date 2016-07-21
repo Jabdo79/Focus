@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GPlace {
 	private String name, googleID;
-	private ArrayList<String> topics;
+	private ArrayList<String> topics = new ArrayList<String>();
 	private double lat, lng;
 	
 	public String getName() {

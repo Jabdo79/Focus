@@ -30,33 +30,28 @@ public class FocusUpController {
 
 	@RequestMapping("/index")
 	public String index(Model model, HttpServletRequest request) {
-		String fbString = request.getParameter("fbID");
-		long fbID=0;
-		if(fbString!=null){
-			fbID = Long.parseLong(fbString);
-			model.addAttribute("fbID", fbID);
-		}
-		
 		return "index";
 	}
 	
-	//IN PROGRESS**********************************************************
-	@RequestMapping("/submitLogin")
-	public String logIn(Model model, @CookieValue(value = "loggedIn", defaultValue = "false") String loggedIn, 
+	@RequestMapping("/login")
+	public String createLogin(Model model, HttpServletRequest request) {
+		return "log_in";
+	}
+	
+	@RequestMapping("/submit_login")
+	public String logIn(Model model, @CookieValue(value = "fbID", defaultValue = "0") String loggedIn,
 			HttpServletResponse response, HttpServletRequest request) {
-		String fbString = request.getParameter("fbID");
-				if(fbString.length()<1){
-					return "log_in";
-				}
-				Cookie cookie = new Cookie("fbID", fbString);
-				response.addCookie(cookie);
-				model.addAttribute("cookie", cookie);
+
+		String fbID = request.getParameter("fbID");
+		if (fbID.length() < 1)
+			return "log_in";
+
+		Cookie cookie = new Cookie("fbID", fbID);
+		response.addCookie(cookie);
+		model.addAttribute("fbID", Long.parseLong(fbID));
 		return "profile";
 	}
-	@RequestMapping("/log_in")
-	public ModelAndView createLogin(Model model) {
-		return new ModelAndView("log_in", "test", model);
-	}
+	
 	@RequestMapping("/focus_points")
 	public String map(@RequestParam("address") String address, Model model)
 			throws FileNotFoundException, IOException, ParseException {
@@ -141,21 +136,13 @@ public class FocusUpController {
 	}
 	
 	@RequestMapping("/study_here")
-	public String createStudyHereForm(Model model, HttpServletRequest request){
+	public String createStudyHereForm(Model model, HttpServletRequest request, @CookieValue(value = "fbID", defaultValue = "0") String fbID){
 		String id = request.getParameter("id");
 		model.addAttribute("googleID", id);
 		
-		if(model.containsAttribute("fbID")){
-			return "studyHereForm";
-		}
-		
-		String fbString = request.getParameter("fbID");
-		long fbID=0;
-		if(fbString!=null){
-			fbID = Long.parseLong(fbString);
-			model.addAttribute("fbID", fbID);
-			model.addAttribute("command", new Broadcast());
-			
+		if(fbID.length() > 0){
+			model.addAttribute("fbID", Long.parseLong(fbID));
+			model.addAttribute("command", new Broadcast());	
 			return "studyHereForm";
 		}	
 		

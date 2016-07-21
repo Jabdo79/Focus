@@ -5,63 +5,6 @@
 <html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-<!-- Facebook Login Script -->
-<script>
-//initialize and setup facebook js sdk
-window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '809387572495380',
-      xfbml      : true,
-      version    : 'v2.7'
-    });
-    FB.getLoginStatus(function(response) {
-    	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'We are connected.';
-    		document.getElementById('login').style.visibility = 'hidden';
-    	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'We are not logged in.'
-    	} else {
-    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
-    	}
-    });
-};
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-//login with facebook with extra permissions
-function login() {
-	FB.login(function(response) {
-		if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in.';
-    		document.getElementById('login').style.visibility = 'hidden';
-    		getInfo();
-    	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'We are not logged in.'
-    	} else {
-    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
-    	}
-	}, {scope: 'email'});
-}
-
-//getting basic user info then submitting form
-function getInfo() {
-	FB.api('/me', 'GET', {fields: 'id'}, function(response) {
-		document.getElementById('fbID').value = response.id;
-	});
-	submitFrm();
-}
-</script>
-<script type="text/javascript">
-function submitFrm(){
-	document.getElementById("hiddenForm").submit();
-}
-</script>
-
 <!-- Google Maps API -->
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&libraries=places"></script>
@@ -160,18 +103,8 @@ html, body {
 <title>FocusUP - Places to study</title>
 </head>
 <body onload="initialize()">
-<!-- Facebook Login UI -->
-	<div align="center">
-		<table>
-			<tr>
-				<td><div id="status"></div></td>
-				<td><button onclick="login()" id="login">Login</button></td>
-			</tr>
-		</table>
-		<form><input type="hidden" id="fbID"></form>
-	</div>
 
-	<h1 align="center">FocusUP!</h1>${fbID}
+	<h1 align="center">FocusUP!</h1>
 
 	<div align="left">
 	<table><tr>

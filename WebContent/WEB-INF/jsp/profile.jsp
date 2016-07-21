@@ -57,7 +57,7 @@ function login() {
 }*/
 
 
-
+/*
 // getting basic user info
 function getInfo() {
 	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,email'}, function(response) {
@@ -68,11 +68,11 @@ function getInfo() {
 }
 	
 function getProfilePic(){
-	/* make the API call */
+	//make the API call 
 	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
 		var img = document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
 	});
-}
+}*/
 </script>
 <script>
 function getTime(){
@@ -85,22 +85,13 @@ function checkStudying(){
 		document.getElementById('studying').style.visibility = "visible";
 }
 </script>
-
+<script>
+	if (document.cookie.indexOf("fbID") < 0)
+		window.location("log_in.html");
+</script>
 <title>Focus UP! - Profile</title>
 </head>
 <body onload="checkStudying()">
-<%
-	String loggedIn = null; 
-	Cookie[] cookies = request.getCookies(); 
-	if (cookies != null){
-		for (Cookie fbID : cookies){
-			if (fbID.getName().equals("loggedIn") && Double.parseDouble(fbID.getValue())>0)
-					loggedIn = fbID.getValue();
-		}
-	}
-	if (loggedIn == null)
-		response.sendRedirect("log_in.jsp");
-%>
 <!-- Facebook Login UI -->
 	<div align="right">
 		<table>
