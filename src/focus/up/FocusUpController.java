@@ -60,10 +60,13 @@ public class FocusUpController {
 		//parse json obj jGeoString
 		JSONObject jGeocode = (JSONObject) parser.parse(jGeoString);
 		JSONArray results = (JSONArray) jGeocode.get("results");
-		JSONObject geometry = (JSONObject) results.get(0);
+		JSONObject listing = (JSONObject) results.get(0);
+		JSONObject geometry = (JSONObject) listing.get("geometry");
 		JSONObject location = (JSONObject) geometry.get("location");
-		String sLat = (String) location.get("lat");
-		String sLng = (String) location.get("lng");
+		
+		
+		String sLat = location.get("lat").toString();
+		String sLng = location.get("lng").toString();
 
 		URL starbucks = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=starbucks");
 		URL dunkin = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=dunkin+donuts");
@@ -87,6 +90,7 @@ public class FocusUpController {
 		jAllResults.addAll(allResults); 
 		
 		String jAllResultsString = jAllResults.toJSONString();
+		System.out.println(jAllResultsString);
 		model.addAttribute("jAllResultsString", jAllResultsString);
 		
 		return "map";
