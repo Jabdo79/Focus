@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.gson.Gson;
+
 @Controller
 public class FocusUpController {
 
@@ -86,12 +88,10 @@ public class FocusUpController {
 		
 		DAO.loadActiveTopics(allResults);
 		//convert allResults to json
-		JSONArray jAllResults = new JSONArray();
-		jAllResults.addAll(allResults); 
+		Gson gson = new Gson();
+		String jAllResultsString = gson.toJson(allResults);	
 		
-		String jAllResultsString = jAllResults.toJSONString();
-		System.out.println(jAllResultsString);
-		model.addAttribute("jAllResultsString", jAllResultsString);
+		model.addAttribute("jResults", jAllResultsString);
 		
 		return "map";
 	}

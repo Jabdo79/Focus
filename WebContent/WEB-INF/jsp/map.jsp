@@ -67,98 +67,81 @@ function submitFrm(){
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&libraries=places"></script>
 <!-- Google Maps JS Display -->
 <script>	
-var geocoder = new google.maps.Geocoder();
-var map;
-var jGeocode = JSON.parse('${jGeocode}');
-var userLoc;
-var service;
-var infowindow;
+	var geocoder = new google.maps.Geocoder();
+	var map;
+	var jGeocode = JSON.parse('${jGeocode}');
+	var jResults = JSON.parse('${jResults}');
+	var userLoc;
+	var service;
+	var infowindow = new google.maps.InfoWindow();
 
-function initialize() {
-	userLoc = new google.maps.LatLng(
-			jGeocode.results[0].geometry.location.lat,
-			jGeocode.results[0].geometry.location.lng);
+	function initialize() {
+		userLoc = new google.maps.LatLng(
+				jGeocode.results[0].geometry.location.lat,
+				jGeocode.results[0].geometry.location.lng);
+		
+		map = new google.maps.Map(document.getElementById('map'), {
+			center : userLoc,
+			zoom : 13,
+			scrollwheel : false,
+			draggable : false
+		});
+		//add marker for user location
+		//customize markers for each type of location
+		//focusSearch();
 
-	map = new google.maps.Map(document.getElementById('map'), {
-		center : userLoc,
-		zoom : 13,
-		scrollwheel : false,
-		draggable : false
-	});
-	//add marker for user location
-	//customize markers for each type of location
-	focusSearch();
-}
+		loopResults();
+	}
 
-function focusSearch() {
-	service = new google.maps.places.PlacesService(map);
-	infowindow = new google.maps.InfoWindow()
-
-	service.nearbySearch({
-		location : userLoc,
-		radius : 7000,
-		//openNow: true,
-		name : 'starbucks'
-	}, iterateResults);
-
-	service.nearbySearch({
-		location : userLoc,
-		radius : 7000,
-		//openNow: true,
-		name : 'dunkin donuts'
-	}, iterateResults);
-
-	service.nearbySearch({
-		location : userLoc,
-		radius : 7000,
-		//openNow: true,
-		name : 'panera'
-	}, iterateResults);
-
-	service.nearbySearch({
-		location : userLoc,
-		radius : 7000,
-		//openNow: true,
-		name : 'library'
-	}, iterateResults);
-}
-
-function iterateResults(results, status) {
-	if (status === google.maps.places.PlacesServiceStatus.OK) {
-		for (var i = 0; i < results.length; i++) {
-			createMarker(results[i]);
+	function loopResults() {
+		for (var i = 0; i < jResults.length; i++) {
+			createMarker(jResults[i]);
 		}
 	}
-}
 
-function createMarker(place) {
-	var placeLoc = place.geometry.location;
-	var marker = new google.maps.Marker({
-		map : map,
-		position : place.geometry.location
-	});
+	function createMarker(place) {
+		var placeLoc = new google.maps.LatLng(place.lat, place.lng);
+		var marker = new google.maps.Marker({
+			map : map,
+			position : placeLoc });
 
-	google.maps.event.addListener(marker, 'click', function() {
-		infowindow.setContent(place.name+"<br><a href=\"study_here.html?id="+place.place_id+"\">Study Here</a>");
-		infowindow.open(map, this);
-	});
-}
+		google.maps.event.addListener(marker, 'click', function() {
+			if(place.topics != null){
+				//display topics
+				var info = place.name + "<br><a href=\"study_here.html?id=" + place.googleID + "\">Study Here</a><br>Topics:<br>";
+				var topics = "";
+				for(var i=0; i<place.topics.length; i++){
+					topics += place.topics[i] + "<br>"
+				}
+				info += topics;
+				
+				infowindow.setContent(info);
+				infowindow.open(map, this);
+				
+			}else{
+				infowindow.setContent(place.name
+						+ "<br><a href=\"study_here.html?id=" + place.googleID
+						+ "\">Study Here</a>");
+				infowindow.open(map, this);
+			}
+		});
+	}
 
-function codeAddress() {
-	var address = document.getElementById("address").value;
-	geocoder.geocode({
-		'address' : address
-	}, function(results, status) {
-		if (status == google.maps.GeocoderStatus.OK) {
-			map.setCenter(results[0].geometry.location);
-			userLoc = results[0].geometry.location;
-			focusSearch();
-		} else {
-			alert("Geocode was not successful for the following reason: "
-					+ status);
-		}
-	});
-}
+	function codeAddress() {
+		var address = document.getElementById("address").value;
+		geocoder.geocode({
+			'address' : address
+		}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				map.setCenter(results[0].geometry.location);
+				userLoc = results[0].geometry.location;
+				focusSearch();
+			} else {
+				alert("Geocode was not successful for the following reason: "
+						+ status);
+			}
+		});
+	}
 </script>
 
 <style type="text/css">
@@ -185,9 +168,8 @@ html, body {
 				<td><button onclick="login()" id="login">Login</button></td>
 			</tr>
 		</table>
+		<form><input type="hidden" id="fbID"></form>
 	</div>
-<form action="index.html" method="post" id="hiddenForm">
-<input type="hidden" name="fbID" id="fbID" value=""></input></form>
 
 	<h1 align="center">FocusUP!</h1>${fbID}
 

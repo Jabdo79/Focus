@@ -1,7 +1,5 @@
 package focus.up;
 
-import org.apache.commons.lang3.time.StopWatch;
-
 public class User {
 	private int id; 
 	private String name; 
@@ -56,16 +54,4 @@ public class User {
 	public void setFbID(long fbID) {
 		this.fbID = fbID;
 	}
-
-
-	/*public void cooldownTimer(User user){
-		StopWatch stopwatch = new StopWatch();
-		stopwatch.start();
-		while(stopwatch.getTime() < 7200000){
-			//do nothing for 2 hours 
-		}
-		stopwatch.stop();	
-		setEndTime(getStartTime()+2);
-		Level.calcExp(user);			
-	}*/
 }
