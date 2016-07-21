@@ -7,7 +7,7 @@
 <!-- Facebook Login Script -->
 <script>
 // initialize and setup facebook js sdk
-window.fbAsyncInit = function() {
+/*window.fbAsyncInit = function() {
     FB.init({
       appId      : '809387572495380',
       xfbml      : true,
@@ -19,7 +19,7 @@ window.fbAsyncInit = function() {
     		document.getElementById('login').style.visibility = 'hidden';
     		
     		/* make the API call *///display the profile pic after login triggered 
-    		FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
+    		/*FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
     			bob.src=response.picture.data.url;
     			document.getElementById('status').innerHTML = response.id;
     			document.getElementById('status').innerHTML = response.email;
@@ -54,7 +54,7 @@ function login() {
     		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
     	}
 	}, {scope: 'email'}, {scope: 'public_profile'});
-}
+}*/
 
 
 
@@ -89,6 +89,18 @@ function checkStudying(){
 <title>Focus UP! - Profile</title>
 </head>
 <body onload="checkStudying()">
+<%
+	String loggedIn = null; 
+	Cookie[] cookies = request.getCookies(); 
+	if (cookies != null){
+		for (Cookie fbID : cookies){
+			if (fbID.getName().equals("loggedIn") && Double.parseDouble(fbID.getValue())>0)
+					loggedIn = fbID.getValue();
+		}
+	}
+	if (loggedIn == null)
+		response.sendRedirect("log_in.jsp");
+%>
 <!-- Facebook Login UI -->
 	<div align="right">
 		<table>
