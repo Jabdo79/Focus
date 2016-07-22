@@ -195,14 +195,21 @@ public class DAO {
 		Session hibernateSession = factory.getCurrentSession();
 		hibernateSession.beginTransaction();
 		
-		//get a list of all active topics for a googleID
+		//get a list of all active topics and ratings for a googleID
 		for(int i=0; i<allResults.size(); i++){
 			Query query = hibernateSession.createQuery("SELECT topic FROM Broadcast WHERE googleID = :gID ");
 			List<String> topics = query.setParameter("gID", allResults.get(i).getGoogleID()).list();
 			
+			Query queryRating = hibernateSession.createQuery("SELECT rating FROM Location WHERE googleID = :gID ");
+			List<Integer> rating = queryRating.setParameter("gID", allResults.get(i).getGoogleID()).list();
+			
 			//add all the active topics to the GPlace with matching googleID
 			for(int j=0; j<topics.size(); j++){
 				allResults.get(i).setTopics(topics.get(j));
+			}
+			//add all the active ratings to the GPlace with matching googleID
+			if(! rating.isEmpty()){
+				allResults.get(i).setRating(rating.get(0));
 			}
 		}
 		hibernateSession.close();	

@@ -48,22 +48,22 @@
 			position : placeLoc });
 
 		google.maps.event.addListener(marker, 'click', function() {
+				
 			if(place.topics.length > 0){
-				//display topics
-				var info = place.name + "<br><a href=\"study_here.html?gID=" + place.googleID + "&gName="+ place.name +"\">Study Here</a><br>Topics:<br>";
+				//display topics & ratings 
+				var info = place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?gID=" + place.googleID + "&gName="+ place.name +"\">Study Here</a><br>Topics:<br>";
 				var topics = "";
 				for(var i=0; i<place.topics.length; i++){
 					topics += place.topics[i] + "<br>"
 				}
+				
 				info += topics;
 				
 				infowindow.setContent(info);
 				infowindow.open(map, this);
 				
 			}else{
-				infowindow.setContent(place.name
-						+ "<br><a href=\"study_here.html?gID=" + place.googleID
-						+ "&gName="+ place.name +"\">Study Here</a>");
+				infowindow.setContent(place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?gID=" + place.googleID + "&gName="+ place.name +"\">Study Here</a><br>");
 				infowindow.open(map, this);
 			}
 		});
