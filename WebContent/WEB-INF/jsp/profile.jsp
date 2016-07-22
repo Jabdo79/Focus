@@ -41,7 +41,7 @@ window.fbAsyncInit = function() {
 <!-- Log in Required -->
 <script>
 	if (document.cookie.indexOf("fbID") < 0)
-		window.location.href="index.html";
+		window.location.href="log_in.html";
 </script>
 <!-- Log in UI -->
 <script>
