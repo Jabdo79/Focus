@@ -4,17 +4,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<!-- Log in UI -->
+<script>
+function initLogInUI(){	
+	if (document.cookie.indexOf("fbID") >= 0){
+		document.getElementById('login').style.visibility = 'hidden';
+		document.getElementById('logout').style.visibility = 'visible';
+	}
+}
+</script>
+
 <title>FocusUP - Find a place to study, see what's being studied in your area</title>
 </head>
-<body>
+<body onload="initLogInUI()">
 <!-- Login UI -->
 	<div align="right">
-		<table>
-			<tr>
-				<td><div id="status"></div></td>
-				<td><a href = "login.html">Log In</a></td>
-			</tr>
-		</table>
+				<div id="logout" style="visibility:hidden"><a href = "log_out.html">Log Out</a></div>
+				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
 	</div>
 
 <div align="center">

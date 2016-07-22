@@ -1,5 +1,9 @@
 package focus.up;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +13,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class DAO {
 	private static SessionFactory factory;
@@ -124,18 +132,28 @@ public class DAO {
 		hibernateSession.beginTransaction();
 		Query query = hibernateSession.createQuery("FROM User WHERE fbID = :fbID ");
 		List<User> results = query.setParameter("fbID", fbID).list();
-		
-		User existing;
-		if(results.size()<1){
-			existing = new User();
-			existing.setFbID(fbID);
-		}else{
-			existing = results.get(0);
-		}
-		
 		hibernateSession.close();
 		
-		return existing;
+		if(results.size()<1){
+			User user = new User();
+			user.setFbID(fbID);
+			return user;
+		}else{
+			return results.get(0);
+		}
+	}
+	
+	public static void updateUser(User user){
+		if (factory == null)
+			setupFactory();
+		
+		Session hibernateSession = factory.getCurrentSession();
+		hibernateSession.beginTransaction();
+		
+		hibernateSession.saveOrUpdate(user);
+		hibernateSession.getTransaction().commit();
+		
+		hibernateSession.close();
 	}
 	
 	public static void addRating(String gID, int rating){
@@ -160,6 +178,7 @@ public class DAO {
 			hibernateSession.merge(existing);
 		}
 		
+		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
 	}
 	
@@ -181,6 +200,37 @@ public class DAO {
 			}
 		}
 		hibernateSession.close();	
+	}
+	
+	public static String getJson(URL url) throws IOException {
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(url.openStream()));
+		String line, json="";
+		while ((line = bReader.readLine()) != null) {
+			json += line;
+		}
+		bReader.close();
+		return json;
+	}
+	
+	public static void fillResultsList(String jSearch, ArrayList<GPlace> allResults) throws ParseException{
+		JSONParser parser = new JSONParser();
+		
+		JSONObject jObject = (JSONObject) parser.parse(jSearch);
+		JSONArray jResults = (JSONArray) jObject.get("results");
+		
+		for(int i=0; i<jResults.size(); i++){
+			GPlace gPlace = new GPlace();
+			JSONObject currentListing = (JSONObject) jResults.get(i);
+			JSONObject geometry = (JSONObject) currentListing.get("geometry");
+			JSONObject location = (JSONObject) geometry.get("location");
+			
+			gPlace.setLat((double) location.get("lat"));
+			gPlace.setLng((double) location.get("lng"));		
+			gPlace.setName((String) currentListing.get("name"));
+			gPlace.setGoogleID((String) currentListing.get("place_id"));
+			
+			allResults.add(gPlace);
+		}
 	}
 }
 

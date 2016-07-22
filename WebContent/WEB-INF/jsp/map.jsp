@@ -49,9 +49,9 @@
 			position : placeLoc });
 
 		google.maps.event.addListener(marker, 'click', function() {
-			if(place.topics != null){
+			if(place.topics.length > 0){
 				//display topics
-				var info = place.name + "<br><a href=\"study_here.html?id=" + place.googleID + "\">Study Here</a><br>Topics:<br>";
+				var info = place.name + "<br><a href=\"study_here.html?gID=" + place.googleID + "&gName="+ place.name +"\">Study Here</a><br>Topics:<br>";
 				var topics = "";
 				for(var i=0; i<place.topics.length; i++){
 					topics += place.topics[i] + "<br>"
@@ -63,13 +63,14 @@
 				
 			}else{
 				infowindow.setContent(place.name
-						+ "<br><a href=\"study_here.html?id=" + place.googleID
-						+ "\">Study Here</a>");
+						+ "<br><a href=\"study_here.html?gID=" + place.googleID
+						+ "&gName="+ place.name +"\">Study Here</a>");
 				infowindow.open(map, this);
 			}
 		});
 	}
 
+	/*
 	function codeAddress() {
 		var address = document.getElementById("address").value;
 		geocoder.geocode({
@@ -85,6 +86,7 @@
 			}
 		});
 	}
+	*/
 </script>
 
 <style type="text/css">
@@ -100,19 +102,35 @@ html, body {
 }
 </style>
 
+<!-- Log in UI -->
+<script>
+function initLogInUI(){	
+	if (document.cookie.indexOf("fbID") >= 0){
+		document.getElementById('login').style.visibility = 'hidden';
+		document.getElementById('logout').style.visibility = 'visible';
+	}
+}
+</script>
+
 <title>FocusUP - Places to study</title>
 </head>
-<body onload="initialize()">
-
+<body onload="initialize(); initLogInUI();">
+<!-- Login UI -->
+	<div align="right">
+				<div id="logout" style="visibility:hidden"><a href = "log_out.html">Log Out</a></div>
+				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
+	</div>
+	
 	<h1 align="center">FocusUP!</h1>
 
-	<div align="left">
-	<table><tr>
+	<div align="center">
+	Select a location below, see what's being studied there and click "Study Here" to choose the location!
+	<!-- <table><tr>
 		<td><input id="address" type="textbox" placeholder="Enter another address" onkeydown="if (event.keyCode == 13) { codeAddress();}"></td>
 		<td><input type="button" value="Find Focus Points!" onclick="codeAddress()"></td>
-			<td>Select a location below and click "Study Here"</td>
+			<td>Select a location below, see what's being studied there and click "Study Here" to choose the location!</td>
 			</tr>
-	</table>
+	</table> -->
 	</div>
 	<!-- Google Map div -->
 	<div id="map"></div>

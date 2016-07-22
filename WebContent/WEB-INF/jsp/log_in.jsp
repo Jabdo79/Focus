@@ -14,14 +14,14 @@ window.fbAsyncInit = function() {
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to the front page in 5 seconds.';
+    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to your Profile in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'We are not logged in.'
+    		document.getElementById('status').innerHTML = 'Authorization Error'
     	} else {
-    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
+    		document.getElementById('status').innerHTML = 'Please log in via Facebook to continue.';
     	}
     });
 };
@@ -37,22 +37,23 @@ window.fbAsyncInit = function() {
 function login() {
 	FB.login(function(response) {
 		if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to the front page in 5 seconds.';
+    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to your Profile in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'We are not logged in.'
+    		document.getElementById('status').innerHTML = 'Authorization Error'
     	} else {
-    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
+    		document.getElementById('status').innerHTML = 'Please log in via Facebook to continue.';
     	}
 	}, {scope: 'email'});
 }
 
 // getting basic user info then submitting form
 function getInfo() {
-	FB.api('/me', 'GET', {fields: 'id'}, function(response) {
+	FB.api('/me', 'GET', {fields: 'id, name'}, function(response) {
 		document.getElementById('fbID').value = response.id;
+		document.getElementById('fbName').value = response.name;
 	});
 }
 
@@ -66,18 +67,19 @@ function submitFrm(){
 </head>
 <body>
 <h1 align="center">FocusUP - Log In</h1>
-<p align="center">Please log in via Facebook to continue.</p>
 <!-- Facebook Login UI -->
 	<div align="center">
 		<table>
 			<tr>
-				<td><div id="status"></div></td>
+				<td><div id="status" align="center"></div></td>
 				<td><button onclick="login()" id="login">Login</button></td>
 			</tr>
 		</table>
 	</div>
 	
 <form action="submit_login.html" method="post" id="hiddenForm">
-<input type="hidden" name="fbID" id="fbID"></input></form>
+<input type="hidden" name="fbID" id="fbID"></input>
+<input type="hidden" name="fbName" id="fbName"></input>
+</form>
 </body>
 </html>

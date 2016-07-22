@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<!-- Facebook Login Script -->
+<!-- Facebook Script -->
 <script>
 // initialize and setup facebook js sdk
-/*window.fbAsyncInit = function() {
+window.fbAsyncInit = function() {
     FB.init({
       appId      : '809387572495380',
       xfbml      : true,
@@ -15,21 +15,20 @@
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'We are connected.';
-    		document.getElementById('login').style.visibility = 'hidden';
-    		
-    		/* make the API call *///display the profile pic after login triggered 
-    		/*FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
-    			bob.src=response.picture.data.url;
-    			document.getElementById('status').innerHTML = response.id;
-    			document.getElementById('status').innerHTML = response.email;
-    			document.getElementById('status').innerHTML = response.name;
-    			
+    		//make the API call 
+			//display the profile pic after login triggered 
+    		FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
+    			proPic.src=response.picture.data.url;
+    			//document.getElementById('status').innerHTML = response.id;
+    			//document.getElementById('status').innerHTML = response.email;
+    			//document.getElementById('header').innerHTML = "FocusUP! - " + response.name;
     		});
     	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'We are not logged in.'
+    		window.location("log_in.html");
+    		//document.getElementById('status').innerHTML = 'Authorization error.'
     	} else {
-    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
+    		window.location("log_in.html");
+    		//document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
     	}
     });
 };
@@ -41,6 +40,7 @@
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+/*
 // login with facebook with extra permissions
 function login() {
 	FB.login(function(response) {
@@ -73,7 +73,24 @@ function getProfilePic(){
 		var img = document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
 	});
 }*/
+
 </script>
+
+<!-- Log in Required -->
+<script>
+	if (document.cookie.indexOf("fbID") < 0)
+		window.location("log_in.html");
+</script>
+<!-- Log in UI -->
+<script>
+function initLogInUI(){	
+	if (document.cookie.indexOf("fbID") >= 0){
+		document.getElementById('login').style.visibility = 'hidden';
+		document.getElementById('logout').style.visibility = 'visible';
+	}
+}
+</script>
+<!-- Time and Broadcast functions -->
 <script>
 function getTime(){
 	var d = new Date();
@@ -83,35 +100,48 @@ function getTime(){
 function checkStudying(){
 	if("${broadcast.topic}".length > 0)
 		document.getElementById('studying').style.visibility = "visible";
+	else
+		document.getElementById('not_studying').style.visibility = "visible";
 }
 </script>
-<script>
-	if (document.cookie.indexOf("fbID") < 0)
-		window.location("log_in.html");
-</script>
+
+
+
 <title>Focus UP! - Profile</title>
 </head>
-<body onload="checkStudying()">
-<!-- Facebook Login UI -->
+
+<body onload="checkStudying(); initLogInUI();">
+<!-- Login UI -->
 	<div align="right">
-		<table>
-		<tr><td><img name="bob" ></td></tr>
-			<tr>
-				<td><div id="status"></div></td>
-				<td><button onclick="getInfo()">Get Info</button></td>
-				<td><button onclick="login()" id="login">Login</button></td>
-			</tr>
-		</table>
+				<div id="logout" style="visibility:hidden"><a href = "log_out.html">Log Out</a></div>
+				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
 	</div>
 
-<h1>Focus UP! - Profile</h1>
+<h1 id="header" align="center">Focus UP! - ${user.name}</h1>
+<table align="center" cellspacing="30">
+<tr>
+<td align="center">Level<br><div style="font-weight: bold;">${user.level}</div></td>
+<td><div align="center"><img border="4px" name="proPic"></div></td>
+<td align="center">XP<br><div style="font-weight: bold;">${user.exp}</div></td>
+</tr>
+</table>
+
+<div id="not_studying" style="visibility: hidden" align="center">
+<a href="index.html">Find a spot to study!</a>
+</div>
+
 <div id="studying" style="visibility: hidden">
 <form action="stop_studying.html" method="post">
-	<table>
+	<table align="center">
 		<tr>
-			<td>Studying: "${broadcast.topic}"</td>
+			<td>Currently Studying: </td>
+			<td><div style="font-weight: bold;">${broadcast.topic}</div></td>
+		</tr>
+		<tr>
+			<td>Location: </td>
+			<td><div style="font-weight: bold;">${googleName}</div></td>
 			<td><select name="rating">
-					<option value="0">Rate your location</option>
+					<option value="0">Rate this location</option>
 					<option value="5">5</option>
 					<option value="4">4</option>
 					<option value="3">3</option>

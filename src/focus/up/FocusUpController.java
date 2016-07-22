@@ -33,7 +33,7 @@ public class FocusUpController {
 		return "index";
 	}
 	
-	@RequestMapping("/login")
+	@RequestMapping("/log_in")
 	public String createLogin(Model model, HttpServletRequest request) {
 		return "log_in";
 	}
@@ -41,14 +41,28 @@ public class FocusUpController {
 	@RequestMapping("/submit_login")
 	public String logIn(Model model, @CookieValue(value = "fbID", defaultValue = "0") String loggedIn,
 			HttpServletResponse response, HttpServletRequest request) {
-
+		
+		//return to log in page if no fbID found
 		String fbID = request.getParameter("fbID");
 		if (fbID.length() < 1)
 			return "log_in";
-
+		
+		//create a cookie with the user's fbID for log in verification
 		Cookie cookie = new Cookie("fbID", fbID);
 		response.addCookie(cookie);
 		model.addAttribute("fbID", Long.parseLong(fbID));
+		
+		//get the user by fbID, if none found a new user is created using fbID+name
+		User user = DAO.getUser(Long.parseLong(fbID));
+		if(user.getName()!=null){
+			model.addAttribute("user", user);
+		}else{
+			user.setName(request.getParameter("fbName"));
+			DAO.updateUser(user);
+			model.addAttribute("user", user);
+			System.out.println("user should be saved");
+		}
+		
 		return "profile";
 	}
 	
@@ -64,7 +78,7 @@ public class FocusUpController {
 		URL geoUrl = new URL(
 				"https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&address="
 						+ address);
-		String jGeoString = getJson(geoUrl);
+		String jGeoString = DAO.getJson(geoUrl);
 		model.addAttribute("jGeocode", jGeoString);
 
 		//parse json obj jGeoString
@@ -83,16 +97,16 @@ public class FocusUpController {
 		URL panera = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=panera");
 		URL library = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=library");
 		
-		String jStarbucks = getJson(starbucks);
-		String jDunkin = getJson(dunkin);
-		String jPanera = getJson(panera);
-		String jLibrary = getJson(library);
+		String jStarbucks = DAO.getJson(starbucks);
+		String jDunkin = DAO.getJson(dunkin);
+		String jPanera = DAO.getJson(panera);
+		String jLibrary = DAO.getJson(library);
 		
 		ArrayList<GPlace> allResults = new ArrayList<GPlace>();
-		fillResultsList(jStarbucks, allResults);
-		fillResultsList(jDunkin, allResults);
-		fillResultsList(jPanera, allResults);
-		fillResultsList(jLibrary, allResults);
+		DAO.fillResultsList(jStarbucks, allResults);
+		DAO.fillResultsList(jDunkin, allResults);
+		DAO.fillResultsList(jPanera, allResults);
+		DAO.fillResultsList(jLibrary, allResults);
 		
 		DAO.loadActiveTopics(allResults);
 		//convert allResults to json
@@ -103,68 +117,49 @@ public class FocusUpController {
 		
 		return "map";
 	}
-
-	public String getJson(URL url) throws IOException {
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(url.openStream()));
-		String line, json="";
-		while ((line = bReader.readLine()) != null) {
-			json += line;
-		}
-		bReader.close();
-		return json;
-	}
-	
-	public void fillResultsList(String jSearch, ArrayList<GPlace> allResults) throws ParseException{
-		JSONParser parser = new JSONParser();
-		
-		JSONObject jObject = (JSONObject) parser.parse(jSearch);
-		JSONArray jResults = (JSONArray) jObject.get("results");
-		
-		for(int i=0; i<jResults.size(); i++){
-			GPlace gPlace = new GPlace();
-			JSONObject currentListing = (JSONObject) jResults.get(i);
-			JSONObject geometry = (JSONObject) currentListing.get("geometry");
-			JSONObject location = (JSONObject) geometry.get("location");
-			
-			gPlace.setLat((double) location.get("lat"));
-			gPlace.setLng((double) location.get("lng"));		
-			gPlace.setName((String) currentListing.get("name"));
-			gPlace.setGoogleID((String) currentListing.get("place_id"));
-			
-			allResults.add(gPlace);
-		}
-	}
 	
 	@RequestMapping("/study_here")
 	public String createStudyHereForm(Model model, HttpServletRequest request, @CookieValue(value = "fbID", defaultValue = "0") String fbID){
-		String id = request.getParameter("id");
-		model.addAttribute("googleID", id);
+		//change id to gID
+		String gID = request.getParameter("gID");
+		model.addAttribute("googleID", gID);
+		
+		String gName = request.getParameter("gName");
+		model.addAttribute("googleName", gName);
 		
 		if(fbID.length() > 0){
 			model.addAttribute("fbID", Long.parseLong(fbID));
 			model.addAttribute("command", new Broadcast());	
-			return "studyHereForm";
+			return "study_here";
 		}	
 		
 		return "log_in";	
 	}
 	
 	@RequestMapping("/start_studying")
-	public String broadcastLocation(@ModelAttribute("command") Broadcast broadcast, Model model){
+	public String broadcastLocation(@ModelAttribute("command") Broadcast broadcast, @ModelAttribute("googleName") String gName, Model model){
 		DAO.addBroadcast(broadcast);
+		User user = DAO.getUser(broadcast.getFbID());
+		
+		model.addAttribute("user", user);
 		model.addAttribute("broadcast", broadcast);
+		//gName is not accessible in profile for some reason
+		model.addAttribute("googleName", gName);
+		
 		return "profile";
 	}
 	
 	@RequestMapping("/stop_studying")
 	public String removeBroadcast(Model model, HttpServletRequest request){
+		//need a catch here to prevent user from clicking back and then trying to remove a broadcast thats already gone = null exception
+		
 		long fbID = Long.parseLong(request.getParameter("fbID"));
 		int endTime = Integer.parseInt(request.getParameter("endTime"));
 		int rating = Integer.parseInt(request.getParameter("rating"));
-		
-		//calc exp for user from start time
 		User user = DAO.getUser(fbID);
 		Broadcast broadcast = DAO.getBroadcast(fbID);
+		
+		//calc exp for user from start time
 		Level.calcExp(user, broadcast.getStartTime(), endTime);
 		
 		//submit rating for location
@@ -173,6 +168,11 @@ public class FocusUpController {
 		
 		//remove broadcast for logged in user
 		DAO.removeBroadcast(fbID);
+		
+		//update user in database
+		DAO.updateUser(user);
+		
+		model.addAttribute("user", user);
 		
 		return "profile";
 	}
