@@ -1,4 +1,4 @@
-<!-- Spring Form Tag Library -->    
+<!-- Spring Form Tag Library -->
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 <!-- Log in Required -->
 <script>
 	if (document.cookie.indexOf("fbID") < 0)
-		window.location("log_in.html");
+		window.location.href="index.html";
 </script>
 <!-- Log in UI -->
 <script>
@@ -34,10 +34,15 @@ function getTime(){
 <title>Focus UP! - Study Here</title>
 </head>
 <body>
+<!-- Login UI -->
+	<div align="right">
+				<div id="logout" style="visibility:hidden"><a href = "profile.html">Profile</a> - <a href = "log_out.html">Log Out</a></div>
+				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
+	</div>
 	
 <h1 align="center">${googleName} - Focus Point</h1>
 <div align="center">
-<form:form method="POST" action="start_studying.html">
+<form:form method="POST" action="start_studying.html?gName=${googleName}">
 <form:input path="googleID" type="hidden" value="${googleID}"></form:input>
 <form:input path="fbID" type="hidden" value="${fbID}"></form:input>
 <form:input path="startTime" type="hidden"></form:input>

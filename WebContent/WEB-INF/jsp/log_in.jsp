@@ -14,7 +14,7 @@ window.fbAsyncInit = function() {
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to your Profile in a moment.';
+    		document.getElementById('status').innerHTML = 'Welcome back! You will be redirected to your Profile in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     		setTimeout(submitFrm, 5000);
@@ -51,7 +51,7 @@ function login() {
 
 // getting basic user info then submitting form
 function getInfo() {
-	FB.api('/me', 'GET', {fields: 'id, name'}, function(response) {
+	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
 		document.getElementById('fbID').value = response.id;
 		document.getElementById('fbName').value = response.name;
 	});
@@ -69,12 +69,9 @@ function submitFrm(){
 <h1 align="center">FocusUP - Log In</h1>
 <!-- Facebook Login UI -->
 	<div align="center">
-		<table>
-			<tr>
-				<td><div id="status" align="center"></div></td>
-				<td><button onclick="login()" id="login">Login</button></td>
-			</tr>
-		</table>
+<div id="status" align="center"></div></td>
+<button onclick="login()" id="login" style="align:center;">Login</button>
+
 	</div>
 	
 <form action="submit_login.html" method="post" id="hiddenForm">

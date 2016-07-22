@@ -20,7 +20,7 @@ function initLogInUI(){
 <body onload="initLogInUI()">
 <!-- Login UI -->
 	<div align="right">
-				<div id="logout" style="visibility:hidden"><a href = "log_out.html">Log Out</a></div>
+				<div id="logout" style="visibility:hidden"><a href = "profile.html">Profile</a> - <a href = "log_out.html">Log Out</a></div>
 				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
 	</div>
 

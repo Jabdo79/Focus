@@ -19,15 +19,12 @@ window.fbAsyncInit = function() {
 			//display the profile pic after login triggered 
     		FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
     			proPic.src=response.picture.data.url;
-    			//document.getElementById('status').innerHTML = response.id;
-    			//document.getElementById('status').innerHTML = response.email;
-    			//document.getElementById('header').innerHTML = "FocusUP! - " + response.name;
     		});
     	} else if (response.status === 'not_authorized') {
-    		window.location("log_in.html");
+    		window.location.href="log_in.html";
     		//document.getElementById('status').innerHTML = 'Authorization error.'
     	} else {
-    		window.location("log_in.html");
+    		window.location.href="log_in.html";
     		//document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
     	}
     });
@@ -39,47 +36,12 @@ window.fbAsyncInit = function() {
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
-
-/*
-// login with facebook with extra permissions
-function login() {
-	FB.login(function(response) {
-		if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'We are connected.';
-    		document.getElementById('login').style.visibility = 'hidden';
-    		
-    	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'We are not logged in.'
-    	} else {
-    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
-    	}
-	}, {scope: 'email'}, {scope: 'public_profile'});
-}*/
-
-
-/*
-// getting basic user info
-function getInfo() {
-	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,email'}, function(response) {
-		//response. calls the fields value 
-		document.getElementById('status').innerHTML = response.id;
-		document.getElementById('status').innerHTML = response.email;
-	});
-}
-	
-function getProfilePic(){
-	//make the API call 
-	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
-		var img = document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
-	});
-}*/
-
 </script>
 
 <!-- Log in Required -->
 <script>
 	if (document.cookie.indexOf("fbID") < 0)
-		window.location("log_in.html");
+		window.location.href="index.html";
 </script>
 <!-- Log in UI -->
 <script>
@@ -105,15 +67,13 @@ function checkStudying(){
 }
 </script>
 
-
-
 <title>Focus UP! - Profile</title>
 </head>
 
 <body onload="checkStudying(); initLogInUI();">
 <!-- Login UI -->
 	<div align="right">
-				<div id="logout" style="visibility:hidden"><a href = "log_out.html">Log Out</a></div>
+				<div id="logout" style="visibility:hidden"><a href = "profile.html">Profile</a> - <a href = "log_out.html">Log Out</a></div>
 				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
 	</div>
 
@@ -138,7 +98,7 @@ function checkStudying(){
 			<td><div style="font-weight: bold;">${broadcast.topic}</div></td>
 		</tr>
 		<tr>
-			<td>Location: </td>
+			<td align="right">Location: </td>
 			<td><div style="font-weight: bold;">${googleName}</div></td>
 			<td><select name="rating">
 					<option value="0">Rate this location</option>
@@ -148,11 +108,10 @@ function checkStudying(){
 					<option value="2">2</option>
 					<option value="1">1</option>
 			</select></td>
-		</tr>
-		<tr>
 			<td><input type="submit" onclick="getTime(); " value="Stop Studying"/></td>
 		</tr>
-	</table>
+		</table>
+		
 	<input type="hidden" id="fbID" name="fbID" value="${broadcast.fbID}">
 	<input type="hidden" id="endTime" name="endTime">
 </form>

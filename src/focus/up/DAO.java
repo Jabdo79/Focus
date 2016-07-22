@@ -101,6 +101,12 @@ public class DAO {
 		hibernateSession.beginTransaction();
 		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
 		List<Broadcast> results = query.setParameter("fbID", fbID).list();
+		
+		if(results.isEmpty()){
+			hibernateSession.close();
+			return null;
+		}
+		
 		Broadcast existing = results.get(0);
 		
 		hibernateSession.close();

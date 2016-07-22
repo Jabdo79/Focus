@@ -55,7 +55,11 @@ public class FocusUpController {
 		//get the user by fbID, if none found a new user is created using fbID+name
 		User user = DAO.getUser(Long.parseLong(fbID));
 		if(user.getName()!=null){
+			Broadcast broadcast = DAO.getBroadcast(Long.parseLong(fbID));
+			if(broadcast!=null)
+				model.addAttribute("broadcast", broadcast);
 			model.addAttribute("user", user);
+			
 		}else{
 			user.setName(request.getParameter("fbName"));
 			DAO.updateUser(user);
@@ -63,6 +67,23 @@ public class FocusUpController {
 			System.out.println("user should be saved");
 		}
 		
+		return "profile";
+	}
+	
+	@RequestMapping("/log_out")
+	public String logOut(Model model) {
+		return "log_out";
+	}
+	
+	@RequestMapping("/profile")
+	public String profile(Model model, @CookieValue(value = "fbID", defaultValue = "0") String sfbID) {
+		User user = DAO.getUser(Long.parseLong(sfbID));
+
+		Broadcast broadcast = DAO.getBroadcast(Long.parseLong(sfbID));
+		if (broadcast != null)
+			model.addAttribute("broadcast", broadcast);
+		model.addAttribute("user", user);
+
 		return "profile";
 	}
 	
@@ -95,7 +116,7 @@ public class FocusUpController {
 		URL starbucks = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=starbucks");
 		URL dunkin = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=dunkin+donuts");
 		URL panera = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=panera");
-		URL library = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=library");
+		URL library = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&type=library");
 		
 		String jStarbucks = DAO.getJson(starbucks);
 		String jDunkin = DAO.getJson(dunkin);
@@ -137,13 +158,13 @@ public class FocusUpController {
 	}
 	
 	@RequestMapping("/start_studying")
-	public String broadcastLocation(@ModelAttribute("command") Broadcast broadcast, @ModelAttribute("googleName") String gName, Model model){
+	public String broadcastLocation(@ModelAttribute("command") Broadcast broadcast, Model model, HttpServletRequest request){
 		DAO.addBroadcast(broadcast);
 		User user = DAO.getUser(broadcast.getFbID());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("broadcast", broadcast);
-		//gName is not accessible in profile for some reason
+		String gName = request.getParameter("gName");
 		model.addAttribute("googleName", gName);
 		
 		return "profile";
