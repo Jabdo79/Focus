@@ -6,6 +6,7 @@ public class GPlace {
 	private String name, googleID;
 	private ArrayList<String> topics = new ArrayList<String>();
 	private double lat, lng;
+	private int rating; 
 	
 	public String getName() {
 		return name;
@@ -36,5 +37,11 @@ public class GPlace {
 	}
 	public void setLng(double lng) {
 		this.lng = lng;
+	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
 	}
 }
