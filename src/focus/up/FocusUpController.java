@@ -35,6 +35,13 @@ public class FocusUpController {
 	
 	@RequestMapping("/log_in")
 	public String createLogin(Model model, HttpServletRequest request) {
+		String origin = request.getParameter("origin");
+		if(origin != null && origin.equals("map")){
+			model.addAttribute("origin", origin);
+			model.addAttribute("jResults", request.getParameter("jResults"));
+			model.addAttribute("jGeocode", request.getParameter("jGeocode"));
+		}
+		
 		return "log_in";
 	}
 	
@@ -64,7 +71,20 @@ public class FocusUpController {
 			user.setName(request.getParameter("fbName"));
 			DAO.updateUser(user);
 			model.addAttribute("user", user);
-			System.out.println("user should be saved");
+		}
+		
+		String origin = request.getParameter("origin");
+
+		if(origin != null && origin.equals("map")){
+			model.addAttribute("jResults", request.getParameter("jResults"));
+			model.addAttribute("jGeocode", request.getParameter("jGeocode"));
+			return "map";
+		}else if(origin.equals("studyhere")){
+			model.addAttribute("googleID", request.getParameter("googleID"));
+			model.addAttribute("googleName", request.getParameter("googleName"));
+			model.addAttribute("fbID", Long.parseLong(fbID));
+			model.addAttribute("command", new Broadcast());
+			return "study_here";
 		}
 		
 		return "profile";
@@ -90,6 +110,8 @@ public class FocusUpController {
 	@RequestMapping("/focus_points")
 	public String map(@RequestParam("address") String address, Model model)
 			throws FileNotFoundException, IOException, ParseException {
+		if(address.isEmpty())
+			return "index";
 		
 		JSONParser parser = new JSONParser();
 		address.trim();
@@ -113,10 +135,10 @@ public class FocusUpController {
 		String sLat = location.get("lat").toString();
 		String sLng = location.get("lng").toString();
 
-		URL starbucks = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=starbucks");
-		URL dunkin = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=dunkin+donuts");
-		URL panera = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=panera");
-		URL library = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&type=library");
+		URL starbucks = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=starbucks&opennow=true");
+		URL dunkin = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=dunkin+donuts&opennow=true");
+		URL panera = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&name=panera&opennow=true");
+		URL library = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&location="+sLat+","+sLng+"&radius=6000&type=library&opennow=true");
 		
 		String jStarbucks = DAO.getJson(starbucks);
 		String jDunkin = DAO.getJson(dunkin);
@@ -141,18 +163,22 @@ public class FocusUpController {
 	
 	@RequestMapping("/study_here")
 	public String createStudyHereForm(Model model, HttpServletRequest request, @CookieValue(value = "fbID", defaultValue = "0") String fbID){
-		//change id to gID
-		String gID = request.getParameter("gID");
+		String gID = request.getParameter("googleID");
 		model.addAttribute("googleID", gID);
 		
-		String gName = request.getParameter("gName");
+		String gName = request.getParameter("googleName");
 		model.addAttribute("googleName", gName);
+		model.addAttribute("origin", "studyhere");
 		
-		if(fbID.length() > 0){
+		if(fbID.length() > 1){
 			model.addAttribute("fbID", Long.parseLong(fbID));
 			model.addAttribute("command", new Broadcast());	
+			
+			ArrayList<User> fUsers = DAO.getUsersStudying(gID);
+			model.addAttribute("fUsers", fUsers);
+			
 			return "study_here";
-		}	
+		}		
 		
 		return "log_in";	
 	}

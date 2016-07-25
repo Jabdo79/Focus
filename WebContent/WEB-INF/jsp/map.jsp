@@ -51,7 +51,7 @@
 				
 			if(place.topics.length > 0){
 				//display topics & ratings 
-				var info = place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?gID=" + place.googleID + "&gName="+ place.name +"\">Study Here</a><br>Topics:<br>";
+				var info = place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?googleID=" + place.googleID + "&googleName="+ place.name +"\">Study Here</a><br>Topics:<br>";
 				var topics = "";
 				for(var i=0; i<place.topics.length; i++){
 					topics += place.topics[i] + "<br>"
@@ -63,29 +63,11 @@
 				infowindow.open(map, this);
 				
 			}else{
-				infowindow.setContent(place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?gID=" + place.googleID + "&gName="+ place.name +"\">Study Here</a><br>");
+				infowindow.setContent(place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?googleID=" + place.googleID + "&googleName="+ place.name +"\">Study Here</a><br>");
 				infowindow.open(map, this);
 			}
 		});
 	}
-
-	/*
-	function codeAddress() {
-		var address = document.getElementById("address").value;
-		geocoder.geocode({
-			'address' : address
-		}, function(results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				map.setCenter(results[0].geometry.location);
-				userLoc = results[0].geometry.location;
-				focusSearch();
-			} else {
-				alert("Geocode was not successful for the following reason: "
-						+ status);
-			}
-		});
-	}
-	*/
 </script>
 
 <style type="text/css">
@@ -117,7 +99,12 @@ function initLogInUI(){
 <!-- Login UI -->
 	<div align="right">
 				<div id="logout" style="visibility:hidden"><a href = "profile.html">Profile</a> - <a href = "log_out.html">Log Out</a></div>
-				<div id="login" style="visibility:visible"><a href = "log_in.html">Log In</a></div>
+				<form action="log_in.html" method="post">
+				<div id="login" style="visibility:visible"><input type="submit" value="Log In"></div>
+				<input type="hidden" name="origin" value="map">
+				<input type="hidden" name="jResults" value='${jResults}'>
+				<input type="hidden" name="jGeocode" value='${jGeocode}'>
+				</form>
 	</div>
 	
 	<h1 align="center">FocusUP!</h1>

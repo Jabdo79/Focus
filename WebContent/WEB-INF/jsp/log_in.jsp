@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,7 +15,7 @@ window.fbAsyncInit = function() {
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Welcome back! You will be redirected to your Profile in a moment.';
+    		document.getElementById('status').innerHTML = 'Welcome back! You will be redirected in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     		setTimeout(submitFrm, 5000);
@@ -37,7 +38,7 @@ window.fbAsyncInit = function() {
 function login() {
 	FB.login(function(response) {
 		if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to your Profile in a moment.';
+    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     		setTimeout(submitFrm, 5000);
@@ -77,6 +78,11 @@ function submitFrm(){
 <form action="submit_login.html" method="post" id="hiddenForm">
 <input type="hidden" name="fbID" id="fbID"></input>
 <input type="hidden" name="fbName" id="fbName"></input>
+<input type="hidden" name="origin" value='${origin}'>
+<input type="hidden" name="jResults" value='${jResults}'>
+<input type="hidden" name="jGeocode" value='${jGeocode}'>
+<input type="hidden" name="googleID" value='${googleID}'>
+<input type="hidden" name="googleName" value='${googleName}'>
 </form>
 </body>
 </html>

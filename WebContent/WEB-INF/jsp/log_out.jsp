@@ -6,7 +6,7 @@
 <!-- Delete Cookie/Log Out -->
 <script>
 document.cookie = "fbID=; max-age=0";
-setTimeout(redirect, 5000);
+setTimeout(redirect, 2000);
 	function redirect() {
 		window.location.href="index.html";
 	}

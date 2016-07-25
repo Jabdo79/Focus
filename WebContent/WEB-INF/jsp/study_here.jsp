@@ -33,7 +33,7 @@ function getTime(){
 
 <title>Focus UP! - Study Here</title>
 </head>
-<body>
+<body onload="initLogInUI();">
 <!-- Login UI -->
 	<div align="right">
 				<div id="logout" style="visibility:hidden"><a href = "profile.html">Profile</a> - <a href = "log_out.html">Log Out</a></div>
@@ -47,7 +47,7 @@ function getTime(){
 <form:input path="fbID" type="hidden" value="${fbID}"></form:input>
 <form:input path="startTime" type="hidden"></form:input>
 Study Topic :
-<form:input path="topic" type="text" placeholder="What are you studying today?" size="40"/></td>
+<form:input path="topic" type="text" placeholder="What are you studying today?" size="40"/>
 <button type="submit" value="submit" onclick="getTime();">Start Studying!</button>
 </form:form>
 </div>
