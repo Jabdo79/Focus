@@ -34,7 +34,7 @@
 
 		loopResults();
 	}
-
+	
 	function loopResults() {
 		for (var i = 0; i < jResults.length; i++) {
 			createMarker(jResults[i]);
@@ -43,11 +43,32 @@
 
 	function createMarker(place) {
 		var placeLoc = new google.maps.LatLng(place.lat, place.lng);
+		var marker;
 		
-		//marker for current location
-		var marker = new google.maps.Marker({
-			map : map,
-			position : placeLoc });
+		var iconBase = 'images/markers/';
+	    var icons = {
+	      studying: {
+	        icon: iconBase + 'marker-white-full.png'
+	      },
+	      empty: {
+	        icon: iconBase + 'marker-white-empty.png'
+	      }
+	    };
+		
+		if(place.topics.length > 0){
+			//marker for current location if it has active topics
+			marker = new google.maps.Marker({
+				icon: icons.studying.icon,
+				map : map,
+				position : placeLoc });
+		}else{
+			//marker for current location if it has no topics
+			marker = new google.maps.Marker({
+				icon: icons.empty.icon,
+				map : map,
+				position : placeLoc });
+		}
+		
 		
 		//Event listener for current marker
 		google.maps.event.addListener(marker, 'click', function() {
