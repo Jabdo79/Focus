@@ -50,6 +50,8 @@ public class DAO {
 		factory = configuration.buildSessionFactory(serviceRegistry);
 	}
 
+	//Saves Broadcast to db if not found, if found it updates the existing broadcast.
+	//A user can have only one Broadcast
 	public static void addBroadcast(Broadcast broadcast) {
 		if (factory == null)
 			setupFactory();
@@ -74,6 +76,7 @@ public class DAO {
 		hibernateSession.close();
 	}
 
+	//Checks for existing Broadcast in db based on fbID
 	public static boolean containsBroadcast(Broadcast broadcast) {
 		if (factory == null)
 			setupFactory();
@@ -94,6 +97,7 @@ public class DAO {
 		return true;
 	}
 
+	//Return a user's Broadcast based on fbID
 	public static Broadcast getBroadcast(long fbID) {
 		if (factory == null)
 			setupFactory();
@@ -116,7 +120,9 @@ public class DAO {
 
 		return existing;
 	}
-	
+
+	//Get a list of broadcasts based on the users in the list received
+	//Creates a parallel array of topics for the users
 	public static ArrayList<Broadcast> getBroadcastList(ArrayList<User> fUsers){
 		ArrayList<Broadcast> fCasts = new ArrayList<Broadcast>();
 		
@@ -127,6 +133,7 @@ public class DAO {
 		return fCasts;
 	}
 
+	//Remove Broadcast from db based on fbID
 	public static void removeBroadcast(long fbID) {
 		if (factory == null)
 			setupFactory();
@@ -136,13 +143,18 @@ public class DAO {
 
 		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
 		List<Broadcast> results = query.setParameter("fbID", fbID).list();
-		Broadcast existing = results.get(0);
-		hibernateSession.delete(existing);
+		
+		if (!results.isEmpty()) {
+			Broadcast existing = results.get(0);
+			hibernateSession.delete(existing);
+		}
 
 		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
 	}
 
+	//Gets the User from the db based on fbID. 
+	//If it doesn't exist, creates a new user, sets the fbID and returns that.
 	public static User getUser(long fbID) {
 		if (factory == null)
 			setupFactory();
@@ -154,8 +166,8 @@ public class DAO {
 		
 		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
-
-		if (results.size() < 1) {
+		
+		if (results.isEmpty()) {
 			User user = new User();
 			user.setFbID(fbID);
 			return user;
@@ -164,18 +176,21 @@ public class DAO {
 		}
 	}
 
+	//If the User exists in the db it will be updated, if not it will be saved.
 	public static void updateUser(User user) {
 		if (factory == null)
 			setupFactory();
 
 		Session hibernateSession = factory.getCurrentSession();
 		hibernateSession.beginTransaction();
-
+		
 		hibernateSession.saveOrUpdate(user);
+		
 		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
 	}
 
+	//Return a list of all users that are currently studying at a specific location.
 	public static ArrayList<User> getUsersStudying(String gID) {
 		if (factory == null)
 			setupFactory();
@@ -200,6 +215,8 @@ public class DAO {
 		return fUsers;
 	}
 
+	//If location exists the rating is changed and db is updated.
+	//If it doesn't exist then it creates the location and saves it.
 	public static void addRating(String gID, int rating) {
 		if (factory == null)
 			setupFactory();
@@ -210,7 +227,7 @@ public class DAO {
 		List<Location> results = query.setParameter("gID", gID).list();
 
 		Location existing;
-		if (results.size() < 1) {
+		if (results.isEmpty()) {
 			existing = new Location();
 			existing.setGoogleID(gID);
 			existing.setRating(rating);
@@ -225,6 +242,7 @@ public class DAO {
 		hibernateSession.close();
 	}
 
+	//Gets all topics and the rating for each location in the GPlace List
 	public static void loadActiveTopics(ArrayList<GPlace> allResults) {
 		if (factory == null)
 			setupFactory();
@@ -232,19 +250,20 @@ public class DAO {
 		Session hibernateSession = factory.getCurrentSession();
 		hibernateSession.beginTransaction();
 
-		// get a list of all active topics and ratings for a googleID
 		for (int i = 0; i < allResults.size(); i++) {
+			//Gets a list of all active topics for the location from the Broadcast table
 			Query query = hibernateSession.createQuery("SELECT topic FROM Broadcast WHERE googleID = :gID ");
 			List<String> topics = query.setParameter("gID", allResults.get(i).getGoogleID()).list();
-
+			
+			//Gets the rating for the location from the Location table
 			Query queryRating = hibernateSession.createQuery("SELECT rating FROM Location WHERE googleID = :gID ");
 			List<Integer> rating = queryRating.setParameter("gID", allResults.get(i).getGoogleID()).list();
 
-			// add all the active topics to the GPlace with matching googleID
+			// add all the active topics to the GPlace
 			for (int j = 0; j < topics.size(); j++) {
 				allResults.get(i).setTopics(topics.get(j));
 			}
-			// add all the active ratings to the GPlace with matching googleID
+			// add the rating to the GPlace
 			if (!rating.isEmpty()) {
 				allResults.get(i).setRating(rating.get(0));
 			}
@@ -253,6 +272,7 @@ public class DAO {
 		hibernateSession.close();
 	}
 
+	//Reads and stores the json object from the URL into a string
 	public static String getJson(URL url) throws IOException {
 		BufferedReader bReader = new BufferedReader(new InputStreamReader(url.openStream()));
 		String line, json = "";
@@ -263,6 +283,8 @@ public class DAO {
 		return json;
 	}
 
+	//Parses the Json Search Results and uses that to create gPlaces for each listing. 
+	//Then stores them into the ArrayList of Gplaces
 	public static void fillResultsList(String jSearch, ArrayList<GPlace> allResults) throws ParseException {
 		JSONParser parser = new JSONParser();
 

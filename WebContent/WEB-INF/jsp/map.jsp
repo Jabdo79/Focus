@@ -43,10 +43,13 @@
 
 	function createMarker(place) {
 		var placeLoc = new google.maps.LatLng(place.lat, place.lng);
+		
+		//marker for current location
 		var marker = new google.maps.Marker({
 			map : map,
 			position : placeLoc });
-
+		
+		//Event listener for current marker
 		google.maps.event.addListener(marker, 'click', function() {
 				
 			if(place.topics.length > 0){
