@@ -16,3 +16,6 @@ bin/
 log/
 target/
 build/
+
+# FocusUP
+*/hibernate.cfg.xml

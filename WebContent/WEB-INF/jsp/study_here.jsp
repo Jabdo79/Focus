@@ -132,15 +132,21 @@ Study Topic :
 <div style="float:left; width:50%: ">
 <button onclick="post()" id="post" style="align:center;">Instant Post to Facebook Timeline</button>
 <h4>Topics at this Location</h4>
+<c:if test="${fUsers.isEmpty()}">
+<tr><td>No one is studying here yet, be the first!</td></tr>
+</c:if>
+
+<c:if test="${!fUsers.isEmpty()}">
 <p>Click the user to send a FB message and ask if they would like to study together.</p>
 <table style="padding: 20px;">
 <tr><td>Topic</td><td>User</td></tr>
-<c:if test="${!fUsers.isEmpty()}">
-<c:forEach begin="0" end="${fUsers.size()-1}" varStatus="loop">
-<tr><td><c:out value="${fCasts[loop.index].topic}"/></td><td><button onclick="message(${fUsers[loop.index].fbID})"><c:out value="${fUsers[loop.index].name}"/></button></td></tr>
+<c:forEach items="${fUsers}" var="user" varStatus="loop">
+<tr><td><c:out value="${fCasts[loop.index].topic}"/></td><td><button onclick="message(${user.fbID})"><c:out value="${user.name}"/></button></td></tr>
 </c:forEach>
-</c:if>
 </table>
+</c:if>
+
+
 
 </div>
 </body>
