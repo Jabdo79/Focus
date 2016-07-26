@@ -85,6 +85,7 @@ public class DAO {
 		query.setParameter("fbID", broadcast.getFbID());
 		List results = query.list();
 
+		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
 
 		if (results.isEmpty())
@@ -101,6 +102,7 @@ public class DAO {
 		hibernateSession.beginTransaction();
 		Query query = hibernateSession.createQuery("FROM Broadcast WHERE fbID = :fbID ");
 		List<Broadcast> results = query.setParameter("fbID", fbID).list();
+		hibernateSession.getTransaction().commit();
 
 		if (results.isEmpty()) {
 			hibernateSession.close();
@@ -108,10 +110,21 @@ public class DAO {
 		}
 
 		Broadcast existing = results.get(0);
-
+		
+		
 		hibernateSession.close();
 
 		return existing;
+	}
+	
+	public static ArrayList<Broadcast> getBroadcastList(ArrayList<User> fUsers){
+		ArrayList<Broadcast> fCasts = new ArrayList<Broadcast>();
+		
+		for(int i=0; i<fUsers.size(); i++){
+			fCasts.add(getBroadcast(fUsers.get(i).getFbID()));
+		}
+		
+		return fCasts;
 	}
 
 	public static void removeBroadcast(long fbID) {
@@ -138,6 +151,8 @@ public class DAO {
 		hibernateSession.beginTransaction();
 		Query query = hibernateSession.createQuery("FROM User WHERE fbID = :fbID ");
 		List<User> results = query.setParameter("fbID", fbID).list();
+		
+		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
 
 		if (results.size() < 1) {
@@ -170,15 +185,16 @@ public class DAO {
 
 		Query query = hibernateSession.createQuery("SELECT fbID FROM Broadcast WHERE googleID = :googleID ");
 		List<Long> fbids = query.setParameter("googleID", gID).list();
+		hibernateSession.getTransaction().commit();
+		
 		ArrayList<User> fUsers = new ArrayList<User>();
 		
 		if (!fbids.isEmpty()) {
 			for (int i = 0; i < fbids.size(); i++) {
-				System.out.println("fbid "+i+": "+fbids.get(i));
 				fUsers.add(getUser(fbids.get(i)));
 			}
 		}
-
+		
 		hibernateSession.close();
 		
 		return fUsers;
@@ -233,6 +249,7 @@ public class DAO {
 				allResults.get(i).setRating(rating.get(0));
 			}
 		}
+		hibernateSession.getTransaction().commit();
 		hibernateSession.close();
 	}
 

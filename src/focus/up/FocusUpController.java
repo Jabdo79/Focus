@@ -172,15 +172,18 @@ public class FocusUpController {
 		
 		if(fbID.length() > 1){
 			model.addAttribute("fbID", Long.parseLong(fbID));
-			model.addAttribute("command", new Broadcast());	
+			model.addAttribute("command", new Broadcast());
 			
 			ArrayList<User> fUsers = DAO.getUsersStudying(gID);
 			model.addAttribute("fUsers", fUsers);
 			
+			ArrayList<Broadcast> fCasts = DAO.getBroadcastList(fUsers);
+			model.addAttribute("fCasts", fCasts);
+			
 			return "study_here";
 		}		
 		
-		return "log_in";	
+		return "log_in";
 	}
 	
 	@RequestMapping("/start_studying")

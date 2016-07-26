@@ -9,6 +9,7 @@
 <head>
 <!-- Facebook Login Script -->
 <script>
+var fbName="";
 //initialize and setup facebook js sdk
 window.fbAsyncInit = function() {
     FB.init({
@@ -44,7 +45,6 @@ function login() {
     		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to your Profile in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
-    		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
     		document.getElementById('status').innerHTML = 'Authorization Error'
     	} else {
@@ -57,7 +57,7 @@ function login() {
 function getInfo() {
 	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
 		document.getElementById('fbID').value = response.id;
-		document.getElementById('fbName').value = response.name;
+		fbName = response.name;
 	});
 }
 function post() {
@@ -66,19 +66,16 @@ function post() {
 		document.getElementById('fbName').value = response.name;
 	});
 }
-function message() {
+function message(fbID) {
 	FB.ui({
 		app_id:'809387572495380',
         method: 'send',
-        name: "TEST",
+        name: "FocusUP",
         link: 'focusup.6fpqfdndzz.us-west-2.elasticbeanstalk.com',
-        to:975505736895,
-        description:'Test message '
+        to: fbID,
+        message: "FocusUP: Would you like to study together?",
+        description:'Study Together using FocusUP'
 		});
-}
-//submits form
-function submitFrm(){
-	document.getElementById("hiddenForm").submit();
 }
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -120,7 +117,7 @@ function getTime(){
 <h1 align="center">${googleName} - Focus Point</h1>
 <div style="float:right; width:50%: ">
 
-<!-- Right Column -->
+<!-- StudyHere Form - Right Column -->
 <form:form method="POST" action="start_studying.html?gName=${googleName}">
 <form:input path="googleID" type="hidden" value="${googleID}"></form:input>
 <form:input path="fbID" type="hidden" value="${fbID}"></form:input>
@@ -131,10 +128,18 @@ Study Topic :
 </form:form>
 </div>
 
-<!-- Left Column -->
+<!-- Active Users - Left Column -->
 <div style="float:left; width:50%: ">
-<button onclick="post()" id="post" style="align:center;">Post on Facebook</button>
-<button onclick="message()" id="message" style="align:center;">Message</button>
+<button onclick="post()" id="post" style="align:center;">Post to Facebook</button>
+<h4>Topics at this Location</h4>
+<p>Click the user to send a FB message.</p>
+<table style="padding: 20px;">
+<tr><td>Topic</td><td>User</td></tr>
+<c:forEach begin="0" end="${fUsers.size()-1}" varStatus="loop">
+<tr><td><c:out value="${fCasts[loop.index].topic}"/></td><td><button onclick="message(${fUsers[loop.index].fbID})"><c:out value="${fUsers[loop.index].name}"/></button></td></tr>
+</c:forEach>
+</table>
+
 </div>
 </body>
 </html>
