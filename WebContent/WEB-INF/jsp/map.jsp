@@ -25,7 +25,7 @@
 		
 		map = new google.maps.Map(document.getElementById('map'), {
 			center : userLoc,
-			zoom : 13,
+			zoom : 12,
 			scrollwheel : false,
 			draggable : false
 		});
@@ -41,53 +41,79 @@
 		}
 	}
 
+	
 	function createMarker(place) {
 		var placeLoc = new google.maps.LatLng(place.lat, place.lng);
 		var marker;
-		
+
 		var iconBase = 'images/markers/';
-	    var icons = {
-	      studying: {
-	        icon: iconBase + 'marker-white-full.png'
-	      },
-	      empty: {
-	        icon: iconBase + 'marker-white-empty.png'
-	      }
-	    };
-		
-		if(place.topics.length > 0){
-			//marker for current location if it has active topics
-			marker = new google.maps.Marker({
-				icon: icons.studying.icon,
-				map : map,
-				position : placeLoc });
-		}else{
-			//marker for current location if it has no topics
-			marker = new google.maps.Marker({
-				icon: icons.empty.icon,
-				map : map,
-				position : placeLoc });
+		var icons = {
+			studying : {
+				starbucks : iconBase + 'starbucks-full.png',
+				dunkin : iconBase + 'dunkin-full.png',
+				panera : iconBase + 'panera-full.png',
+				library : iconBase + 'library-full.png'
+			},
+			empty : {
+				starbucks : iconBase + 'starbucks-empty.png',
+				dunkin : iconBase + 'dunkin-empty.png',
+				panera : iconBase + 'panera-empty.png',
+				library : iconBase + 'library-empty.png'
+			}
+		};
+		console.log(place.name);
+		var placeIcon;
+		if (place.topics.length > 0) {
+			if(place.name == "Starbucks")
+				placeIcon = icons.studying.starbucks;
+			else if(place.name == "Dunkin' Donuts")
+				placeIcon = icons.studying.dunkin;
+			else if(place.name == "Panera Bread")
+				placeIcon = icons.studying.panera;
+			else
+				placeIcon = icons.studying.library;	
+		} else {
+			if(place.name == "Starbucks")
+				placeIcon = icons.empty.starbucks;
+			else if(place.name == "Dunkin' Donuts")
+				placeIcon = icons.empty.dunkin;
+			else if(place.name == "Panera Bread")
+				placeIcon = icons.empty.panera;
+			else
+				placeIcon = icons.empty.library;	
 		}
 		
-		
+		marker = new google.maps.Marker({
+			icon : placeIcon,
+			map : map,
+			position : placeLoc
+		});
+
 		//Event listener for current marker
 		google.maps.event.addListener(marker, 'click', function() {
-				
-			if(place.topics.length > 0){
+
+			if (place.topics.length > 0) {
 				//display topics & ratings 
-				var info = place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?googleID=" + place.googleID + "&googleName="+ place.name +"\">Study Here</a><br>Topics:<br>";
+				var info = place.name + "<br>Rating: " + place.rating
+						+ "<br><a href=\"study_here.html?googleID="
+						+ place.googleID + "&googleName=" + place.name
+						+ "\">Study Here</a><br>Topics:<br>";
 				var topics = "";
-				for(var i=0; i<place.topics.length; i++){
+				for (var i = 0; i < place.topics.length; i++) {
 					topics += place.topics[i] + "<br>"
 				}
-				
+
 				info += topics;
-				
+
 				infowindow.setContent(info);
 				infowindow.open(map, this);
-				
-			}else{
-				infowindow.setContent(place.name + "<br>Rating: " +place.rating + "<br><a href=\"study_here.html?googleID=" + place.googleID + "&googleName="+ place.name +"\">Study Here</a><br>");
+
+			} else {
+				infowindow.setContent(place.name + "<br>Rating: "
+						+ place.rating
+						+ "<br><a href=\"study_here.html?googleID="
+						+ place.googleID + "&googleName=" + place.name
+						+ "\">Study Here</a><br>");
 				infowindow.open(map, this);
 			}
 		});
