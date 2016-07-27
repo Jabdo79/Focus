@@ -28,11 +28,6 @@ import com.google.gson.Gson;
 @Controller
 public class FocusUpController {
 
-	@RequestMapping("/index")
-	public String index(Model model, HttpServletRequest request) {
-		return "index";
-	}
-	
 	@RequestMapping("/log_in")
 	public String createLogin(Model model, HttpServletRequest request) {
 		String origin = request.getParameter("origin");
@@ -108,10 +103,11 @@ public class FocusUpController {
 	}
 	
 	@RequestMapping("/focus_points")
-	public String map(@RequestParam("address") String address, Model model)
+	public String map(Model model, HttpServletRequest request)
 			throws FileNotFoundException, IOException, ParseException {
-		if(address.isEmpty())
-			return "index";
+		String address = request.getParameter("address");
+		if(address == null)
+			address = "detroit,mi";
 		
 		JSONParser parser = new JSONParser();
 		address.trim();

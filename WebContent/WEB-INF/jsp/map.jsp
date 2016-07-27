@@ -136,14 +136,14 @@ html, body {
 }
 
 #map {
-	height: 77%;
+	height: 86%;
 	width: 100%;
 }
 </style>
 
 <!-- Log in UI Script -->
 <script>
-function initLogInUI(){	
+function createLogInUI(){	
 	if (document.cookie.indexOf("fbID") >= 0){
 		var li = document.createElement("li");
 		var a = document.createElement("a");
@@ -175,12 +175,8 @@ function userLogIn(){
 <title>FocusUP - Places to study</title>
 </head>
 
-
-
-
-
-<body onload="initialize(); initLogInUI();">
-	<nav class="navbar navbar-inverse">
+<body onload="initialize(); createLogInUI();">
+<nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
@@ -193,9 +189,9 @@ function userLogIn(){
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-      <form class="navbar-form navbar-left" role="search">
+      <form class="navbar-form navbar-left" role="search" action="focus_points.html" method="post">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Find Focus Points">
+          <input name="address" type="text" class="form-control" placeholder="Find Focus Points">
         </div>
         <button type="submit" class="btn btn-default">Find!</button>
       </form>
@@ -206,12 +202,6 @@ function userLogIn(){
   </div>
 </nav>
 
-
-	<div align="center">
-		Select a location below, see what's being studied there and click
-		"Study Here" to choose the location!
-	</div>
-	
 	
 <!-- Google Map div -->
 <div id="map"></div>
