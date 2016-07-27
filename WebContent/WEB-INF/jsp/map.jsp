@@ -4,12 +4,20 @@
 	pageEncoding="ISO-8859-1"%>
 <html>
 <head>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<!-- Bootstrap required tags -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
+
 <!-- Google Maps API -->
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0JXHBRRGaHqwhRz5pMQVp4_6IpIaS-bA&libraries=places"></script>
 <!-- Google Maps JS Display -->
-<script>	
+<script>
 	var geocoder = new google.maps.Geocoder();
 	var map;
 	var jGeocode = JSON.parse('${jGeocode}');
@@ -61,7 +69,7 @@
 				library : iconBase + 'library-empty.png'
 			}
 		};
-		console.log(place.name);
+
 		var placeIcon;
 		if (place.topics.length > 0) {
 			if(place.name == "Starbucks")
@@ -120,55 +128,110 @@
 	}
 </script>
 
+<!-- Google Maps Size Styling -->
 <style type="text/css">
 html, body {
 	height: 100%;
-	margin: 0;
 	padding: 0;
 }
 
 #map {
-	height: 80%;
+	height: 77%;
 	width: 100%;
 }
 </style>
 
-<!-- Log in UI -->
+<!-- Log in UI Script -->
 <script>
 function initLogInUI(){	
 	if (document.cookie.indexOf("fbID") >= 0){
-		document.getElementById('login').style.visibility = 'hidden';
-		document.getElementById('logout').style.visibility = 'visible';
+		var li = document.createElement("li");
+		var a = document.createElement("a");
+		a.setAttribute("href","profile.html");
+		a.innerHTML="Profile";
+		li.appendChild(a);
+		loginUI.appendChild(li);
+		
+		var li2 = document.createElement("li");
+		var a2 = document.createElement("a");
+		a2.setAttribute("href","log_out.html");
+		a2.innerHTML="Log Out";
+		li2.appendChild(a2);
+		document.getElementById("loginUI").appendChild(li2);	
+	}else{
+		var li = document.createElement("li");
+		var a = document.createElement("a");
+		a.setAttribute("href","javascript: userLogIn()");
+		a.innerHTML="Log In";
+		li.appendChild(a);
+		document.getElementById("loginUI").appendChild(li);
 	}
+}
+function userLogIn(){
+	document.forms["user_login"].submit();
 }
 </script>
 
 <title>FocusUP - Places to study</title>
 </head>
+
+
+
+
+
 <body onload="initialize(); initLogInUI();">
-<!-- Login UI -->
-	<div align="right">
-				<div id="logout" style="visibility:hidden"><a href = "profile.html">Profile</a> - <a href = "log_out.html">Log Out</a></div>
-				<form action="log_in.html" method="post">
-				<div id="login" style="visibility:visible"><input type="submit" value="Log In"></div>
-				<input type="hidden" name="origin" value="map">
-				<input type="hidden" name="jResults" value='${jResults}'>
-				<input type="hidden" name="jGeocode" value='${jGeocode}'>
-				</form>
-	</div>
-	
-	<h1 align="center">FocusUP!</h1>
+	<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">FocusUP!</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Find Focus Points">
+        </div>
+        <button type="submit" class="btn btn-default">Find!</button>
+      </form>
+      <ul id="loginUI" class="nav navbar-nav navbar-right">
+        <!-- Log in/out/profile buttons will be created here -->  
+      </ul>
+    </div>
+  </div>
+</nav>
+
 
 	<div align="center">
-	Select a location below, see what's being studied there and click "Study Here" to choose the location!
-	<!-- <table><tr>
-		<td><input id="address" type="textbox" placeholder="Enter another address" onkeydown="if (event.keyCode == 13) { codeAddress();}"></td>
-		<td><input type="button" value="Find Focus Points!" onclick="codeAddress()"></td>
-			<td>Select a location below, see what's being studied there and click "Study Here" to choose the location!</td>
-			</tr>
-	</table> -->
+		Select a location below, see what's being studied there and click
+		"Study Here" to choose the location!
 	</div>
-	<!-- Google Map div -->
-	<div id="map"></div>
+	
+	
+<!-- Google Map div -->
+<div id="map"></div>
+
+
+<!-- Google Maps Hidden Form -->
+<form name="user_login" action="log_in.html" method="post">
+<input type="hidden" name="origin" value="map"> 
+<input type="hidden" name="jResults" value='${jResults}'> 
+<input type="hidden" name="jGeocode" value='${jGeocode}'>
+</form>
+
+<!-- Bootstrap sources -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
 </body>
 </html>
