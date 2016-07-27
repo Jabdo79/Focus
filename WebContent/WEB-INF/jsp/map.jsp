@@ -12,6 +12,21 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
+<!-- Bootstrap Notify CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.css" type="text/css">
+
+<!-- Bootstrap sources -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
+		
+<!-- Bootstrap Notify -->
+<script src="${pageContext.request.contextPath}/js/bootstrap-notify.js"></script>
 
 <!-- Google Maps API -->
 <script type="text/javascript"
@@ -172,7 +187,7 @@ function userLogIn(){
 }
 </script>
 
-<title>FocusUP - Places to study</title>
+<title>FocusUP - Find Places and People to Study With</title>
 </head>
 
 <body onload="initialize(); createLogInUI();">
@@ -191,7 +206,7 @@ function userLogIn(){
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
       <form class="navbar-form navbar-left" role="search" action="focus_points.html" method="post">
         <div class="form-group">
-          <input name="address" type="text" class="form-control" placeholder="Find Focus Points">
+          <input name="address" type="text" class="form-control" placeholder="Find Focus Points for your City, State" required="required" size="80%">
         </div>
         <button type="submit" class="btn btn-default">Find!</button>
       </form>
@@ -213,15 +228,5 @@ function userLogIn(){
 <input type="hidden" name="jResults" value='${jResults}'> 
 <input type="hidden" name="jGeocode" value='${jGeocode}'>
 </form>
-
-<!-- Bootstrap sources -->
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<!-- Latest compiled and minified JavaScript -->
-<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-		crossorigin="anonymous"></script>
 </body>
 </html>
