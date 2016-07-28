@@ -153,7 +153,7 @@ function getTime(){
 <title>Focus UP! - Study Here</title>
 </head>
 <body onload="createLogInUI();">
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
@@ -170,7 +170,7 @@ function getTime(){
         <div class="form-group">
           <input name="address" type="text" class="form-control" placeholder="Find Focus Points for your City, State" required="required" size="80%">
         </div>
-        <button type="submit" class="btn btn-default">Find!</button>
+        <button type="submit" class="btn btn-success">Find!</button>
       </form>
       <ul id="loginUI" class="nav navbar-nav navbar-right">
         <!-- Log in/out/profile buttons will be created here -->  

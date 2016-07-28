@@ -40,7 +40,7 @@ window.fbAsyncInit = function() {
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
     		document.getElementById('status').innerHTML = 'Welcome back! You will be redirected in a moment.';
-    		document.getElementById('login').style.visibility = 'hidden';
+    		document.getElementById('login').disabled = 'true';
     		getInfo();
     		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
@@ -63,7 +63,7 @@ function login() {
 	FB.login(function(response) {
 		if (response.status === 'connected') {
     		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected in a moment.';
-    		document.getElementById('login').style.visibility = 'hidden';
+    		document.getElementById('login').disabled = 'true';
     		getInfo();
     		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
@@ -87,10 +87,6 @@ function submitFrm(){
 	document.getElementById("hiddenForm").submit();
 }
 </script>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>FocusUP - Log In</title>
-
-
 
 <!-- Log in UI Script -->
 <script>
@@ -111,8 +107,8 @@ function createLogInUI(){
 		document.getElementById("loginUI").appendChild(li2);	
 	}else{
 		var li = document.createElement("li");
+		li.setAttribute("class","active");
 		var a = document.createElement("a");
-		a.setAttribute("href","javascript: userLogIn()");
 		a.innerHTML="Log In";
 		li.appendChild(a);
 		document.getElementById("loginUI").appendChild(li);
@@ -121,10 +117,42 @@ function createLogInUI(){
 function userLogIn(){
 	document.forms["user_login"].submit();
 }
+
+//Facebook Button States
+function hover(element) {
+    element.setAttribute('src', 'images/buttons/fb_login_over.png');
+}
+function unhover(element) {
+    element.setAttribute('src', 'images/buttons/fb_login_normal.png');
+}
+function down(element) {
+    element.setAttribute('src', 'images/buttons/fb_login_normal.png');
+}
 </script>
+
+<!-- Facebook Button CSS -->
+<style>
+.fbbutton{
+	background:url(images/buttons/fb_login_normal.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    width: 356px;
+    height: 70px;
+}
+.fbbutton:hover{   
+    background:url(images/buttons/fb_login_over.png) no-repeat;
+    border:none;
+}
+.fbbutton:active{   
+	background:url(images/buttons/fb_login_down.png) no-repeat;
+    border:none;
+}
+</style>
+
+<title>FocusUP - Log In</title>
 </head>
 <body onload="createLogInUI();">
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
@@ -141,7 +169,7 @@ function userLogIn(){
         <div class="form-group">
           <input name="address" type="text" class="form-control" placeholder="Find Focus Points for your City, State" required="required" size="80%">
         </div>
-        <button type="submit" class="btn btn-default">Find!</button>
+        <button type="submit" class="btn btn-success">Find!</button>
       </form>
       <ul id="loginUI" class="nav navbar-nav navbar-right">
         <!-- Log in/out/profile buttons will be created here -->  
@@ -150,12 +178,13 @@ function userLogIn(){
   </div>
 </nav>
 
-<!-- Facebook Login UI -->
-	<div align="center">
-<div id="status" align="center"></div></td>
-<button onclick="login()" id="login" style="align:center;">Login</button>
 
-	</div>
+<br>
+<!-- Facebook Login UI -->
+<div align="center">
+<button class="fbbutton" onclick="login()" id="login"></button><br><br>
+<div id="status" align="center">Checking for active Facebook log in.</div>
+</div>
 	
 <form action="submit_login.html" method="post" id="hiddenForm">
 <input type="hidden" name="fbID" id="fbID"></input>
