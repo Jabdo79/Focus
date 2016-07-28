@@ -41,8 +41,9 @@ window.fbAsyncInit = function() {
     	if (response.status === 'connected') {
     		//make the API call 
 			//display the profile pic after login triggered 
-    		FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
+    		FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150),birthday'}, function(response) {
     			proPic.src=response.picture.data.url;
+    			console.log(response.birthday);
     		});
     	} else if (response.status === 'not_authorized') {
     		window.location.href="log_in.html";
@@ -120,10 +121,48 @@ function userLogIn(){
 }
 </script>
 
+<style>
+html, body {
+	height: 100%;
+	padding: 0;
+	background-color: #2c3e50;
+}
+.dark {
+background-color: #2c3e50;
+border: 0px;
+margin: 0px;
+padding: 0px;
+}
+.light {
+background-color: white;
+border: 0px;
+margin: 0px;
+padding-bottom: 10px;
+padding-top: 10px;
+}
+.noBrdr{
+border: 0px;
+margin: 0px;
+padding: 0px;
+height: 100%;
+}
+.lrgFont{
+font-size: 30px;
+}
+.spacing{
+padding-left: 20px;
+padding-right: 20px;
+}
+.brdr{
+border: 4px;
+border-color: #2c3e50;
+}
+</style>
+
 <title>Focus UP! - Profile</title>
 </head>
 
-<body onload="checkStudying(); createLogInUI();">
+<body onload="checkStudying(); createLogInUI();" class="noBrdr" bgcolor="#2c3e50">
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -150,45 +189,49 @@ function userLogIn(){
   </div>
 </nav>
 
-<h1 id="header" align="center">${user.name}</h1>
-<table align="center" cellspacing="30">
+<div class="light">
+<table align="center" cellspacing="50">
 <tr>
-<td align="center">Level<br><div style="font-weight: bold;">${user.level}</div></td>
-<td><div align="center"><img border="4px" name="proPic"></div></td>
-<td align="center">XP<br><div style="font-weight: bold;">${user.exp}</div></td>
+<td align="center">
+<div class="text-success lrgFont">${user.exp}</div>
+<div class="noBrdr">Hours</div>
+</td>
+<td align="center" class="spacing"><img class="brdr" name="proPic"></td>
+<td align="center"><div class="text-success lrgFont">${user.level}</div><div class="noBrdr">Level</div></td>
 </tr>
 </table>
-
-
-<div id="studying" style="visibility: hidden">
-<form action="stop_studying.html" method="post">
-	<table align="center">
-		<tr>
-			<td>Currently Studying: </td>
-			<td><div style="font-weight: bold;">${broadcast.topic}</div></td>
-		</tr>
-		<tr>
-			<td align="right">Location: </td>
-			<td><div style="font-weight: bold;">${googleName}</div></td>
-			<td><select name="rating">
-					<option value="0">Rate this location</option>
-					<option value="5">5</option>
-					<option value="4">4</option>
-					<option value="3">3</option>
-					<option value="2">2</option>
-					<option value="1">1</option>
-			</select></td>
-			<td><input type="submit" onclick="getTime(); " value="Stop Studying"/></td>
-		</tr>
-		</table>
-		
-	<input type="hidden" id="fbID" name="fbID" value="${broadcast.fbID}">
-	<input type="hidden" id="endTime" name="endTime">
-</form>
+<h1 align="center">${user.name}</h1>
 </div>
+<div class="dark noBrdr" align="center"><br>
+		<div id="studying" style="visibility: hidden">
+			<form action="stop_studying.html" method="post">
+				<table align="center" class="text-success">
+					<tr>
+						<td>Currently Studying:</td>
+						<td><div style="font-weight: bold;">${broadcast.topic}</div></td>
+					</tr>
+					<tr>
+						<td>Location:</td>
+						<td><div style="font-weight: bold;">${googleName}</div></td>
+					</tr>
+					<tr>
+						<td class="spacing"><select name="rating">
+								<option value="0">Rate this location</option>
+								<option value="5">5</option>
+								<option value="4">4</option>
+								<option value="3">3</option>
+								<option value="2">2</option>
+								<option value="1">1</option>
+						</select></td>
+						<td><input type="submit" onclick="getTime(); "
+							value="Stop Studying" /></td>
+					</tr>
+				</table>
 
-
-
-
+				<input type="hidden" id="fbID" name="fbID" value="${broadcast.fbID}">
+				<input type="hidden" id="endTime" name="endTime">
+			</form>
+		</div>
+	</div>
 </body>
 </html>

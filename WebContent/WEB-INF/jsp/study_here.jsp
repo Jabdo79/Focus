@@ -43,14 +43,14 @@ window.fbAsyncInit = function() {
     });
     FB.getLoginStatus(function(response) {
     	if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Welcome back! You will be redirected to your Profile in a moment.';
-    		document.getElementById('login').style.visibility = 'hidden';
+    		//document.getElementById('status').innerHTML = 'Welcome back! You will be redirected to your Profile in a moment.';
+    		//document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     		setTimeout(submitFrm, 5000);
     	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'Authorization Error'
+    		//document.getElementById('status').innerHTML = 'Authorization Error'
     	} else {
-    		document.getElementById('status').innerHTML = 'Please log in via Facebook to continue.';
+    		//document.getElementById('status').innerHTML = 'Please log in via Facebook to continue.';
     	}
     });
 };
@@ -66,13 +66,12 @@ window.fbAsyncInit = function() {
 function login() {
 	FB.login(function(response) {
 		if (response.status === 'connected') {
-    		document.getElementById('status').innerHTML = 'Thank you for logging in, you will be redirected to your Profile in a moment.';
     		document.getElementById('login').style.visibility = 'hidden';
     		getInfo();
     	} else if (response.status === 'not_authorized') {
-    		document.getElementById('status').innerHTML = 'Authorization Error'
+    		//document.getElementById('status').innerHTML = 'Authorization Error'
     	} else {
-    		document.getElementById('status').innerHTML = 'Please log in via Facebook to continue.';
+    		//document.getElementById('status').innerHTML = 'Please log in via Facebook to continue.';
     	}
 	}, {scope: 'publish_actions'});
 }
@@ -86,7 +85,6 @@ function getInfo() {
 }
 function post() {
 	FB.api('/me/feed', 'post', {message: name + 'I am studying '+ document.getElementById("topic").value +' using FocusUp!!'},function(response) {
-		document.getElementById('status').innerHTML = response.id;
 		document.getElementById('fbName').value = response.name;
 	});
 }
@@ -148,7 +146,44 @@ function getTime(){
 	document.getElementById('startTime').value = d.getHours();
 }
 </script>
-
+<style>
+html, body {
+	height: 100%;
+	padding: 0;
+	background-color: #2c3e50;
+}
+.dark {
+background-color: #2c3e50;
+border: 0px;
+margin: 0px;
+padding: 0px;
+height: 100%;
+}
+.light {
+background-color: white;
+border: 0px;
+margin: 0px;
+padding-bottom: 10px;
+padding-top: 10px;
+}
+.noBrdr{
+border: 0px;
+margin: 0px;
+padding: 0px;
+height: 100%;
+}
+.lrgFont{
+font-size: 30px;
+}
+.spacing{
+padding-left: 20px;
+padding-right: 20px;
+}
+.brdr{
+border: 4px;
+border-color: #2c3e50;
+}
+</style>
 
 <title>Focus UP! - Study Here</title>
 </head>
@@ -178,45 +213,37 @@ function getTime(){
     </div>
   </div>
 </nav>
-
-
-<div style="width:100%;"> 
-
+<div style="width:100%;" class="light"> 
 <!-- Header -->
-<h1 align="center">${googleName}</h1>
-<div style="float:right; width:50%: ">
-
+<h1 align="center" class="noBrdr">${googleName}</h1>
+<br>
+<div align="center">
 <!-- StudyHere Form - Right Column -->
 <form:form method="POST" action="start_studying.html?gName=${googleName}">
 <form:input path="googleID" type="hidden" value="${googleID}"></form:input>
 <form:input path="fbID" type="hidden" value="${fbID}"></form:input>
 <form:input path="startTime" type="hidden"></form:input>
-Study Topic :
 <form:input path="topic" id = "topic" type="text" placeholder="What are you studying today?" size="40"/></td>
 <button type="submit" value="submit" onclick="getTime();">Start Studying!</button>
-</form:form>
+</form:form><br>
 </div>
-
+</div>
 <!-- Active Users - Left Column -->
-<div style="float:left; width:50%: ">
+<div align="center" class="dark noBrdr text-success"><br>
 <button onclick="post()" id="post" style="align:center;">Instant Post to Facebook Timeline</button>
 <h4>Topics at this Location</h4>
 <c:if test="${fUsers.isEmpty()}">
 <tr><td>No one is studying here yet, be the first!</td></tr>
 </c:if>
-
 <c:if test="${!fUsers.isEmpty()}">
-<p>Click the user to send a FB message and ask if they would like to study together.</p>
-<table style="padding: 20px;">
-<tr><td>Topic</td><td>User</td></tr>
+<table>
+<tr><td class="spacing">Topic</td><td>User</td></tr>
 <c:forEach items="${fUsers}" var="user" varStatus="loop">
 <tr><td><c:out value="${fCasts[loop.index].topic}"/></td><td><button onclick="message(${user.fbID})"><c:out value="${user.name}"/></button></td></tr>
 </c:forEach>
-</table>
+</table><br>
+<p>Click the user to send a FB message and ask if they would like to study together.</p>
 </c:if>
-
-
-
 </div>
 </body>
 </html>
