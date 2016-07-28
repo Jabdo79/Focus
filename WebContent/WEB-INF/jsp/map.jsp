@@ -40,6 +40,7 @@
 	var userLoc;
 	var service;
 	var infowindow = new google.maps.InfoWindow();
+	var center;
 
 	function initialize() {
 		userLoc = new google.maps.LatLng(
@@ -48,7 +49,7 @@
 		
 		map = new google.maps.Map(document.getElementById('map'), {
 			center : userLoc,
-			zoom : 12,
+			zoom : 13,
 			scrollwheel : false,
 			draggable : false
 		});
@@ -57,6 +58,12 @@
 
 		loopResults();
 	}
+	//google.maps.event.addDomListener(window, 'load', initialize);
+	google.maps.event.addDomListener(window, "resize", function() {
+ 	center = map.getCenter();
+ 	google.maps.event.trigger(map, "resize");
+	map.setCenter(center); 
+	});
 	
 	function loopResults() {
 		for (var i = 0; i < jResults.length; i++) {
