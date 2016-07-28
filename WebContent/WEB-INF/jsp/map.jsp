@@ -58,8 +58,8 @@
 
 		loopResults();
 	}
-	//google.maps.event.addDomListener(window, 'load', initialize);
-	google.maps.event.addDomListener(window, "resize", function() {
+	//eventlistener for resize
+	google.maps.event.addDomListener(window, "resize", function() {	
  	center = map.getCenter();
  	google.maps.event.trigger(map, "resize");
 	map.setCenter(center); 
